@@ -3,121 +3,200 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Generador de Presupuestos</title>
+
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6366f1">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#6366f1">
+
 <style>
-*{box-sizing:border-box}
-body{font-family:Inter,system-ui;background:#f3f4f6;margin:0;padding:20px}
-.container{background:#fff;padding:30px;border-radius:14px;max-width:1100px;margin:auto;box-shadow:0 10px 30px rgba(0,0,0,0.08)}
-h1{margin:0 0 20px;font-size:26px}
-h3{margin-top:25px;margin-bottom:8px;font-size:16px;color:#444}
-input,select{padding:10px;margin:6px 0;width:100%;border:1px solid #d1d5db;border-radius:8px}
-button{padding:2px 4px;margin-top:2px;border:none;border-radius:4px;background:#6366f1;color:white;cursor:pointer}
-button:hover{background:#4f46e5}
-.delete{background:#ef4444}
-.whatsapp{background:#22c55e}
-.row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
-table{width:100%;border-collapse:collapse;margin-top:20px}
-th,td{
-padding:10px;
-border-bottom:1px solid #eee;
-text-align:left;
-max-width:250px;
-overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
 }
-th{background:#f9fafb}
-.total{font-size:22px;font-weight:600;margin-top:20px}
-.history-item{padding:10px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:8px;background:#fafafa;display:flex;justify-content:space-between;gap:10px}
-.logo{max-height:60px}
-.dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
-.card{background:#fafafa;border:1px solid #eee;padding:15px;border-radius:10px;text-align:center}
-@media (max-width:768px){
+
+body{
+font-family:Inter,system-ui;
+background:#f3f4f6;
+color:#111827;
+padding:30px;
+}
 
 .container{
-padding:15px
+max-width:1200px;
+margin:auto;
 }
 
-.row{
-grid-template-columns:1fr;
+h1{
+font-size:28px;
+margin-bottom:20px;
 }
 
-.dashboard{
-grid-template-columns:1fr;
+h3{
+margin-top:35px;
+margin-bottom:10px;
+font-size:17px;
+color:#374151;
 }
 
-table{
-display:block;
-overflow-x:auto;
-white-space:nowrap;
+/* cards */
+
+.card{
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 6px 18px rgba(0,0,0,0.06);
+margin-bottom:20px;
 }
+
+/* inputs */
+
+input,select{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:1px solid #d1d5db;
+margin-top:6px;
+margin-bottom:6px;
+font-size:14px;
+}
+
+input:focus,select:focus{
+outline:none;
+border-color:#6366f1;
+box-shadow:0 0 0 2px rgba(99,102,241,0.2);
+}
+
+/* botones */
 
 button{
-width:100%;
+padding:10px 14px;
+border:none;
+border-radius:8px;
+background:#6366f1;
+color:white;
+font-size:14px;
+cursor:pointer;
+transition:0.2s;
+margin-top:8px;
+}
+
+button:hover{
+background:#4f46e5;
+transform:scale(1.03);
+}
+
+.delete{
+background:#ef4444;
+}
+
+.delete:hover{
+background:#dc2626;
+}
+
+.whatsapp{
+background:#22c55e;
+}
+
+.whatsapp:hover{
+background:#16a34a;
+}
+
+.modificar{
+background:#facc15;
+color:black;
+}
+
+.modificar:hover{
+background:#eab308;
+}
+
+/* dashboard */
+
+.dashboard{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+margin-bottom:20px;
+}
+
+.dashboard .card{
+text-align:center;
+font-size:16px;
+}
+
+.dashboard strong{
+font-size:24px;
+display:block;
 margin-top:5px;
 }
 
-.logo{
-max-height:40px
-}
+/* tabla */
 
-}
-button{
-padding:10px 12px;
-font-size:15px;
-}
-.card{
-background:#fafafa;
-border:1px solid #e5e7eb;
-padding:15px;
-border-radius:10px;
-line-height:1.6;
-}
-.empresa-header{
-background:#ffffff;
-border-bottom:1px solid #e5e7eb;
-padding:12px 20px;
-display:flex;
-align-items:center;
-gap:15px;
-margin-bottom:15px;
-}
-.filtro-btn{
-padding:4px 8px;
-font-size:12px;
-border-radius:6px;
-background:#e5e7eb;
-color:#111;
-margin-right:4px;
-}
-
-.filtro-btn:hover{
-background:#d1d5db;
-}
-.empresa-header img{
-height:40px;
-}
-
-.empresa-header .datos{
-font-size:14px;
-line-height:1.4;
-}
-
-.empresa-header .nombre{
-font-weight:600;
-font-size:16px;
-}
 table{
 width:100%;
-table-layout:fixed;
+border-collapse:collapse;
+margin-top:15px;
+background:white;
+border-radius:10px;
+overflow:hidden;
 }
+
+th{
+background:#f9fafb;
+text-align:left;
+font-size:13px;
+padding:12px;
+}
+
+td{
+padding:10px;
+border-top:1px solid #eee;
+}
+
+tbody tr:hover{
+background:#fafafa;
+}
+
+/* filas agregar item */
+
+.row{
+display:grid;
+grid-template-columns:2fr 1fr 1fr 1fr;
+gap:10px;
+margin-top:10px;
+}
+
+/* total */
+
+.total{
+font-size:24px;
+font-weight:600;
+margin-top:15px;
+}
+
+/* historial */
+
+.history-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:white;
+border-radius:10px;
+padding:15px;
+margin-bottom:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.05);
+gap:10px;
+flex-wrap:wrap;
+}
+
+/* estados */
+
 .estado{
 padding:3px 8px;
 border-radius:6px;
@@ -144,21 +223,165 @@ color:#991b1b;
 background:#e5e7eb;
 color:#374151;
 }
+
+/* header empresa */
+
+.empresa-header{
+background:white;
+border-radius:12px;
+padding:15px;
+margin-bottom:20px;
+display:flex;
+align-items:center;
+gap:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+.empresa-header img{
+height:40px;
+}
+
+.empresa-header .nombre{
+font-weight:600;
+}
+
+/* filtros */
+
+.filtro-btn{
+background:#e5e7eb;
+color:#111;
+padding:6px 10px;
+font-size:12px;
+border-radius:6px;
+margin-right:5px;
+}
+
+/* responsive */
+
+@media (max-width:768px){
+
+.row{
+grid-template-columns:1fr;
+}
+
+.history-item{
+flex-direction:column;
+align-items:flex-start;
+}
+
+button{
+width:100%;
+}
+
+}
+/* MENU */
+
+.menu{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.menu button{
+background:#e5e7eb;
+color:#111;
+}
+
+.menu button.active{
+background:#6366f1;
+color:white;
+}
+
+/* secciones */
+
+.seccion{
+display:none;
+}
+
+.seccion.activa{
+display:block;
+}
+.cliente-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px;
+border-bottom:1px solid #eee;
+}
+
+.cliente-item:last-child{
+border-bottom:none;
+}
+
+.cliente-datos{
+font-size:14px;
+}
+
+.cliente-botones{
+display:flex;
+gap:6px;
+}
+
+.icon-btn{
+padding:6px 10px;
+font-size:13px;
+}
+.producto-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px;
+border-bottom:1px solid #eee;
+}
+
+.producto-item:last-child{
+border-bottom:none;
+}
+
+.producto-info{
+font-size:14px;
+}
+
+.producto-botones{
+display:flex;
+gap:6px;
+}
 </style>
 </head>
+
 <body>
+
 <div id="empresaHeader" class="empresa-header"></div>
+
 <div class="container">
 
 <h1>Presupuestos</h1>
+<div class="menu">
 
+<button onclick="mostrarSeccion('dashboardSeccion',this)" class="active">Dashboard</button>
+
+<button onclick="mostrarSeccion('presupuestoSeccion',this)">Presupuesto</button>
+
+<button onclick="mostrarSeccion('clientesSeccion',this)">Clientes</button>
+
+<button onclick="mostrarSeccion('productosSeccion',this)">Productos</button>
+
+<button onclick="mostrarSeccion('empresaSeccion',this)">Empresa</button>
+
+<button onclick="mostrarSeccion('historialSeccion',this)">Historial</button>
+
+</div>
+<div id="dashboardSeccion" class="seccion activa">
 <div class="dashboard" id="dashboard"></div>
+</div>
 
 <div id="logoContainer"></div>
 
+<div id="empresaSeccion" class="seccion">
 <h3>Empresa</h3>
 
-<div id="empresaForm">
+<div class="card" id="empresaForm">
 
 <input id="empresa" placeholder="Nombre empresa">
 <input id="cuit" placeholder="CUIT">
@@ -174,54 +397,91 @@ color:#374151;
 </div>
 
 <div id="empresaCard" style="display:none" class="card"></div>
-
+</div>
+<div id="clientesSeccion" class="seccion">
 <h3>Cliente</h3>
-<select id="clienteSelect"></select>
-<input id="cliente" placeholder="Nuevo cliente">
+
+<div class="card">
+
+<input id="cliente" placeholder="Nombre y apellido">
+
 <input id="email" placeholder="Email">
-<button  class="whatsapp"  onclick="guardarCliente()">Guardar cliente</button>
-<button class="delete" onclick="eliminarClienteSeleccionado()">Eliminar cliente</button>
-<!--
-<h3>Plantillas</h3>
 
-<select onchange="cargarPlantilla(this.value)">
+<input id="telefonoCliente" placeholder="Teléfono cliente">
 
-<option value="">Seleccionar plantilla</option>
+<button class="whatsapp" id="btnGuardarCliente" onclick="guardarCliente()">Guardar cliente</button>
 
-<option value="instalacion">Instalación básica</option>
-<option value="construccion">Trabajo de construcción</option>
-<option value="servicio_tecnico">Servicio técnico</option>
+<button class="modificar" id="btnCancelarCliente" style="display:none" onclick="cancelarEdicionCliente()">Cancelar edición</button>
 
-</select>
--->
+<button class="delete" onclick="eliminarClienteSeleccionado()">Eliminar cliente</button> <br>
+
+<h3>Clientes guardados</h3>
+
+<div class="card">
+<div id="listaClientes"></div>
+</div>
+
+</div>
+</div>
+<div id="productosSeccion" class="seccion">
 <h3>Productos</h3>
 
+<div class="card">
+
 <input id="productoNombre" placeholder="Nombre producto o servicio" maxlength="35">
+
 <input id="productoPrecio" type="number" placeholder="Precio base">
 
-<button  class="whatsapp"  onclick="guardarProducto()">Guardar producto</button>
-<button class="delete" onclick="eliminarProducto()">Eliminar producto</button>
+<button class="whatsapp" onclick="guardarProducto()">Guardar producto</button>
 
+<button class="delete" onclick="eliminarProducto()">Eliminar producto</button><br>
+<h3>Productos guardados</h3>
+
+<div class="card">
+<div id="listaProductos"></div>
+</div>
+</div>
+
+</div>
+<div id="presupuestoSeccion" class="seccion">
+    <h3>Elije cliente</h3>
+    <select id="clienteSelect"></select><br>
 <h3>Agregar item</h3>
+
+<div class="card">
+
 <div class="row">
+
 <select id="desc">
 <option value="">Seleccionar producto</option>
 </select>
-<input id="cantidad" type="number" inputmode="numeric" placeholder="Cantidad">
+
+<input id="cantidad" type="number" placeholder="Cantidad">
+
 <select id="unidad">
-<option value="">Elegir unidad de medida</option>
+<option value="">Elegir unidad</option>
 <option value="kg">kg</option>
 <option value="m">m</option>
 <option value="m2">m²</option>
 <option value="unidad">unidad</option>
 <option value="litro">litro</option>
 </select>
-<input id="precio" type="number" inputmode="decimal"  placeholder="Precio">
+
+<input id="precio" type="number" placeholder="Precio">
+
 </div>
+
 <button onclick="agregarItem()">Agregar</button>
 
+</div>
+
+
+<div class="card">
+
 <table id="tabla">
+
 <thead>
+
 <tr>
 <th>Descripción</th>
 <th>Cant</th>
@@ -230,40 +490,59 @@ color:#374151;
 <th>Total</th>
 <th></th>
 </tr>
+
 </thead>
+
 <tbody></tbody>
+
 </table>
 
-<div class="total">Total: <span id="total">$0</span></div>
-<div style="margin-top:10px">
+</div>
+
+
+<div class="total">Total: <span id="total">$0</span></div><br>
+
+
+<div class="card">
+
 <label>Descuento (%)</label>
+
 <input id="descuento" type="number" value="0" oninput="actualizarTotal()">
+
 </div>
+
+
 <button class="delete" onclick="generarPDF()">PDF</button>
-<button  class="whatsapp" onclick="guardarPresupuesto()">Guardar</button>
-<!--<button onclick="enviarEmail()">Email</button>-->
-<!--<button class="whatsapp" onclick="enviarWhatsApp()">WhatsApp</button>-->
-<!--<button onclick="exportarExcel()">Exportar Excel</button>-->
-<!--<button class="delete" onclick="reiniciarApp()">Reiniciar aplicación</button>-->
-<!--
-<button onclick="backupDatos()">Backup</button><input type="file" onchange="importarDatos(event)">-->
-<h3>Buscar historial</h3>
-<input id="buscar" placeholder="Buscar cliente o número" oninput="cargarHistorial()">
-<div style="margin-top:10px;margin-bottom:10px">
-<button class="filtro-btn" onclick="filtrarEstado('todos')">Todos</button>
-<button class="filtro-btn" onclick="filtrarEstado('Pendiente')">Pendientes</button>
-<button class="filtro-btn" onclick="filtrarEstado('Aprobado')">Aprobados</button>
-<button class="filtro-btn" onclick="filtrarEstado('Rechazado')">Rechazados</button>
-<button class="filtro-btn" onclick="filtrarEstado('Vencido')">Vencidos</button>
+<button class="whatsapp" onclick="guardarPresupuesto()">Guardar</button>
 </div>
+<div id="historialSeccion" class="seccion">
+<h3>Buscar historial</h3>
+
+<input id="buscar" placeholder="Buscar cliente o número" oninput="cargarHistorial()">
+
+<div style="margin-top:10px;margin-bottom:10px">
+
+<button class="filtro-btn" onclick="filtrarEstado('todos')">Todos</button>
+
+<button class="filtro-btn" onclick="filtrarEstado('Pendiente')">Pendientes</button>
+
+<button class="filtro-btn" onclick="filtrarEstado('Aprobado')">Aprobados</button>
+
+<button class="filtro-btn" onclick="filtrarEstado('Rechazado')">Rechazados</button>
+
+<button class="filtro-btn" onclick="filtrarEstado('Vencido')">Vencidos</button>
+
+</div>
+
 
 <h3>Historial</h3>
-<div id="historial"></div>
 
+<div id="historial"></div>
+</div>
 </div>
 
 <script>
-
+let editandoProductoIndex = -1
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
     .then(() => console.log('Service Worker registrado'))
@@ -281,6 +560,70 @@ filtroEstado=estado
 cargarHistorial()
 
 }
+function renderListaProductos(){
+
+let productos = JSON.parse(localStorage.getItem('productos') || "[]")
+
+let cont = document.getElementById("listaProductos")
+
+if(!cont) return
+
+cont.innerHTML=""
+
+productos.forEach((p,i)=>{
+
+let div=document.createElement("div")
+
+div.className="producto-item"
+
+div.innerHTML=`
+
+<div class="producto-info">
+<strong>${p.nombre}</strong><br>
+$${p.precio}
+</div>
+
+<div class="producto-botones">
+
+<button class="modificar icon-btn" onclick="editarProductoDesdeLista(${i})">✏️</button>
+
+<button class="delete icon-btn" onclick="eliminarProductoDesdeLista(${i})">🗑</button>
+
+</div>
+
+`
+
+cont.appendChild(div)
+
+})
+
+}
+function editarProductoDesdeLista(i){
+
+let productos = JSON.parse(localStorage.getItem('productos') || "[]")
+
+let p = productos[i]
+
+document.getElementById("productoNombre").value = p.nombre
+document.getElementById("productoPrecio").value = p.precio
+
+editandoProductoIndex = i
+
+}
+function eliminarProductoDesdeLista(i){
+
+if(!confirm("Eliminar producto?")) return
+
+let productos = JSON.parse(localStorage.getItem('productos') || "[]")
+
+productos.splice(i,1)
+
+localStorage.setItem("productos",JSON.stringify(productos))
+
+cargarProductos()
+renderListaProductos()
+
+}
 function moneda(v){
 return Number(v).toLocaleString("es-AR",{style:"currency",currency:"ARS"})
 }
@@ -288,7 +631,67 @@ return Number(v).toLocaleString("es-AR",{style:"currency",currency:"ARS"})
 function numeroFormateado(n){
 return String(n).padStart(4,'0')
 }
+function renderListaClientes(){
 
+let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
+let cont = document.getElementById("listaClientes")
+
+if(!cont) return
+
+cont.innerHTML=""
+
+clientes.forEach((c,i)=>{
+
+let div=document.createElement("div")
+div.className="cliente-item"
+
+div.innerHTML=`
+
+<div class="cliente-datos">
+<strong>${c.nombre}</strong><br>
+${c.email || ""} ${c.telefono ? " • "+c.telefono : ""}
+</div>
+
+<div class="cliente-botones">
+<button class="icon-btn modificar" onclick="editarClienteDesdeLista(${i})">✏️</button>
+<button class="icon-btn delete" onclick="eliminarClienteDesdeLista(${i})">🗑</button>
+</div>
+
+`
+
+cont.appendChild(div)
+
+})
+
+}
+function editarClienteDesdeLista(i){
+
+let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
+let c = clientes[i]
+
+document.getElementById("cliente").value = c.nombre
+document.getElementById("email").value = c.email
+document.getElementById("telefonoCliente").value = c.telefono
+
+editandoClienteIndex = i
+
+mostrarSeccion("clientesSeccion", document.querySelector(".menu button:nth-child(3)"))
+
+}
+function eliminarClienteDesdeLista(i){
+
+if(!confirm("Eliminar cliente?")) return
+
+let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
+
+clientes.splice(i,1)
+
+localStorage.setItem("clientes",JSON.stringify(clientes))
+
+cargarClientes()
+renderListaClientes()
+
+}
 function agregarItem() {
     let desc = document.getElementById('desc').value;
     let cantidad = parseFloat(document.getElementById('cantidad').value);
@@ -734,31 +1137,69 @@ ${config.email ? " • Email: "+config.email : ""}
 `
 
 }
-function guardarProducto(){
+function productoDuplicado(nombre, indexActual = -1){
 
-let nombre=document.getElementById("productoNombre").value
-let precio=parseFloat(document.getElementById("productoPrecio").value)
+let productos = JSON.parse(localStorage.getItem('productos') || "[]")
+
+nombre = nombre.trim().toLowerCase()
+
+return productos.some((p,i)=>{
+
+let nombreGuardado = (p.nombre || "").trim().toLowerCase()
+
+if(i === indexActual) return false
+
+return nombreGuardado === nombre
+
+})
+
+}function guardarProducto(){
+
+let nombre = document.getElementById("productoNombre").value.trim()
+let precio = parseFloat(document.getElementById("productoPrecio").value)
 
 if(!nombre || !precio){
-alert("Completa nombre y precio")
+alert("Ingrese nombre y precio")
 return
 }
 
-let productos=JSON.parse(localStorage.getItem("productos")||"[]")
+let productos = JSON.parse(localStorage.getItem('productos') || "[]")
 
-if(productos.some(p=>p.nombre===nombre)){
-alert("Producto ya existe")
+/* VALIDAR DUPLICADO */
+
+if(productoDuplicado(nombre, editandoProductoIndex)){
+alert("Ya existe un producto con ese nombre")
 return
 }
 
-productos.push({nombre,precio})
+/* GUARDAR O EDITAR */
+
+if(editandoProductoIndex >= 0){
+
+productos[editandoProductoIndex] = {
+nombre,
+precio
+}
+
+editandoProductoIndex = -1
+
+}else{
+
+productos.push({
+nombre,
+precio
+})
+
+}
 
 localStorage.setItem("productos",JSON.stringify(productos))
 
-cargarProductos()
-
 document.getElementById("productoNombre").value=""
 document.getElementById("productoPrecio").value=""
+
+cargarProductos()
+renderListaProductos()
+
 }
 function cancelarEmpresa(){
 
@@ -950,59 +1391,143 @@ historial.splice(i,1)
 localStorage.setItem('historial',JSON.stringify(historial))
 cargarHistorial()
 }
+function clienteDuplicado(nombre, indexActual = -1){
 
-function guardarCliente(){
-    let nombre = document.getElementById('cliente').value
-    let email = document.getElementById('email').value
+let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
 
-    let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
-    if(clientes.some(c => c.nombre.toLowerCase() === nombre.toLowerCase())){
-        alert("Cliente ya existe")
-        return
-    }
-    clientes.push({nombre, email})
-    localStorage.setItem('clientes', JSON.stringify(clientes))
+nombre = nombre.trim().toLowerCase()
 
-    cargarClientes()
+return clientes.some((c,i)=>{
 
-    // Limpiar campos
-    document.getElementById('cliente').value = ""
-    document.getElementById('email').value = ""
-}
+let nombreGuardado = (c.nombre || "").trim().toLowerCase()
 
-function eliminarClienteSeleccionado(){
-let select=document.getElementById('clienteSelect')
-let index=select.value
-if(index==="") return
+if(i === indexActual) return false
 
-let clientes=JSON.parse(localStorage.getItem('clientes')||"[]")
-clientes.splice(index,1)
-localStorage.setItem('clientes',JSON.stringify(clientes))
+return nombreGuardado === nombre
 
-cargarClientes()
-}
-
-function cargarClientes(){
-let clientes=JSON.parse(localStorage.getItem('clientes')||"[]")
-let select=document.getElementById('clienteSelect')
-select.innerHTML="<option value=''>Clientes</option>"
-
-clientes.forEach((c,i)=>{
-let o=document.createElement('option')
-o.value=i
- o.textContent=c.nombre
-select.appendChild(o)
 })
 
-select.onchange=function(){
-let c=clientes[this.value]
-if(!c)return
-
-document.getElementById('cliente').value=c.nombre
- document.getElementById('email').value=c.email
 }
+let editandoClienteIndex = null; // Variable global para saber si estamos editando
+function guardarCliente(){
+
+let nombre = document.getElementById("cliente").value.trim()
+let email = document.getElementById("email").value.trim()
+let telefono = document.getElementById("telefonoCliente").value.trim()
+
+if(!nombre){
+alert("Ingrese nombre del cliente")
+return
 }
 
+let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
+
+/* VALIDAR DUPLICADO */
+
+if(clienteDuplicado(nombre, editandoClienteIndex)){
+alert("Ya existe un cliente con ese nombre")
+return
+}
+
+/* GUARDAR O MODIFICAR */
+
+if(editandoClienteIndex >= 0){
+
+clientes[editandoClienteIndex] = {
+nombre,
+email,
+telefono
+}
+
+editandoClienteIndex = -1
+
+}else{
+
+clientes.push({
+nombre,
+email,
+telefono
+})
+
+}
+
+localStorage.setItem("clientes", JSON.stringify(clientes))
+
+cargarClientes()
+renderListaClientes()
+
+document.getElementById("cliente").value=""
+document.getElementById("email").value=""
+document.getElementById("telefonoCliente").value=""
+
+}
+
+
+function eliminarClienteSeleccionado(){
+    let select = document.getElementById('clienteSelect');
+    let index = select.value;
+    if(index==="") return;
+
+    let clientes = JSON.parse(localStorage.getItem('clientes')||"[]");
+    clientes.splice(index,1);
+    localStorage.setItem('clientes', JSON.stringify(clientes));
+
+    cargarClientes();
+}
+ 
+
+function cargarClientes(){
+    let clientes = JSON.parse(localStorage.getItem('clientes') || "[]");
+    let select = document.getElementById('clienteSelect');
+    select.innerHTML = "<option value=''>Clientes</option>";
+
+    clientes.forEach((c,i)=>{
+        let o = document.createElement('option');
+        o.value = i;
+        o.textContent = c.nombre;
+        select.appendChild(o);
+    });
+/*
+    select.onchange = function(){
+        let c = clientes[this.value];
+        if(c){
+            document.getElementById('cliente').value = c.nombre;
+            document.getElementById('email').value = c.email;
+            document.getElementById('telefonoCliente').value = c.telefono;
+
+            // Activar modo edición
+            editandoClienteIndex = this.value;
+            document.getElementById('btnCancelarCliente').style.display = "inline-block";
+            
+        } else {
+            // Ningún cliente seleccionado
+            editandoClienteIndex = null;
+            document.getElementById('cliente').value = "";
+            document.getElementById('email').value = "";
+            document.getElementById('telefonoCliente').value = "";
+            document.getElementById('btnCancelarCliente').style.display = "none";
+
+        }
+    }*/
+}
+
+function cancelarEdicionCliente(){
+    editandoClienteIndex = null;
+    document.getElementById('cliente').value = "";
+    document.getElementById('email').value = "";
+    document.getElementById('telefonoCliente').value = "";
+
+    document.getElementById('clienteSelect').value = ""; // deseleccionar
+
+    // Restaurar botón guardar
+    let btn = document.getElementById('btnGuardarCliente');
+    btn.classList.remove('modificar');
+    btn.classList.add('whatsapp');
+    btn.innerText = "Guardar cliente";
+
+    // Ocultar botón cancelar
+    document.getElementById('btnCancelarCliente').style.display = "none";
+}
 function exportarExcel(){
 let historial=JSON.parse(localStorage.getItem('historial')||"[]")
 let ws=XLSX.utils.json_to_sheet(historial)
@@ -1078,6 +1603,21 @@ totalItem
 
 renderTabla()
 actualizarTotal()
+
+}
+function mostrarSeccion(id,btn){
+
+document.querySelectorAll(".seccion").forEach(s=>{
+s.classList.remove("activa")
+})
+
+document.getElementById(id).classList.add("activa")
+
+document.querySelectorAll(".menu button").forEach(b=>{
+b.classList.remove("active")
+})
+
+btn.classList.add("active")
 
 }
 function guardarEmpresa(){
@@ -1205,7 +1745,8 @@ actualizarDashboard()
 cargarProductos()
 renderHeaderEmpresa()
 revisarVencimientos()
+renderListaClientes()
+renderListaProductos()
 </script>
-
 </body>
 </html>
