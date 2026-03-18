@@ -13,7 +13,14 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
+.table-responsive{
+overflow-x:auto;
+-webkit-overflow-scrolling:touch;
+}
 
+#tabla{
+min-width:650px;
+}
 *{
 box-sizing:border-box;
 margin:0;
@@ -260,22 +267,54 @@ margin-right:5px;
 
 @media (max-width:768px){
 
-.row{
-grid-template-columns:1fr;
+#tabla th{
+font-size:11px;
+padding:8px;
 }
 
-.history-item{
-flex-direction:column;
-align-items:flex-start;
+#tabla td{
+padding:6px;
+font-size:12px;
 }
 
-button{
-width:100%;
+#tabla input{
+width:65px;
+padding:5px;
+font-size:12px;
+}
+
+#tabla select{
+width:75px;
+padding:5px;
+font-size:12px;
+}
+
+#tabla button{
+padding:4px 6px;
+font-size:11px;
 }
 
 }
 /* MENU */
+.sugerencias{
+position:absolute;
+background:white;
+border:1px solid #ddd;
+width:100%;
+max-height:200px;
+overflow-y:auto;
+z-index:100;
+}
 
+.sugerencias div{
+padding:8px;
+cursor:pointer;
+border-bottom:1px solid #eee;
+}
+
+.sugerencias div:hover{
+background:#f3f4f6;
+}
 .menu{
 display:flex;
 gap:10px;
@@ -360,16 +399,10 @@ gap:6px;
 <div class="menu">
 
 <button onclick="mostrarSeccion('dashboardSeccion',this)" class="active">Dashboard</button>
-
 <button onclick="mostrarSeccion('presupuestoSeccion',this)">Presupuesto</button>
-
 <button onclick="mostrarSeccion('clientesSeccion',this)">Clientes</button>
-
 <button onclick="mostrarSeccion('productosSeccion',this)">Productos</button>
-
 <button onclick="mostrarSeccion('empresaSeccion',this)">Empresa</button>
-
-<button onclick="mostrarSeccion('historialSeccion',this)">Historial</button>
 
 </div>
 <div id="dashboardSeccion" class="seccion activa">
@@ -411,9 +444,9 @@ gap:6px;
 
 <button class="whatsapp" id="btnGuardarCliente" onclick="guardarCliente()">Guardar cliente</button>
 
-<button class="modificar" id="btnCancelarCliente" style="display:none" onclick="cancelarEdicionCliente()">Cancelar edición</button>
+<button class="delete" id="btnCancelarCliente" style="display:none" onclick="cancelarEdicionCliente()">Cancelar edición</button>
 
-<button class="delete" onclick="eliminarClienteSeleccionado()">Eliminar cliente</button> <br>
+<!--<button class="delete" onclick="eliminarClienteSeleccionado()">Eliminar cliente</button>--> <br>
 
 <h3>Clientes guardados</h3>
 
@@ -432,9 +465,11 @@ gap:6px;
 
 <input id="productoPrecio" type="number" placeholder="Precio base">
 
-<button class="whatsapp" onclick="guardarProducto()">Guardar producto</button>
+<button class="whatsapp" id="btnGuardarProducto" onclick="guardarProducto()">Guardar producto</button>
 
-<button class="delete" onclick="eliminarProducto()">Eliminar producto</button><br>
+<button class="delete" id="btnCancelarProducto" style="display:none" onclick="cancelarEdicionProducto()">Cancelar edición</button>
+
+<!--<button class="delete" onclick="eliminarProducto()">Eliminar producto</button>--><br>
 <h3>Productos guardados</h3>
 
 <div class="card">
@@ -445,16 +480,17 @@ gap:6px;
 </div>
 <div id="presupuestoSeccion" class="seccion">
     <h3>Elije cliente</h3>
-    <select id="clienteSelect"></select><br>
+    <select id="clienteSelect" class="cliente"></select><br>
 <h3>Agregar item</h3>
 
 <div class="card">
 
 <div class="row">
 
-<select id="desc">
-<option value="">Seleccionar producto</option>
-</select>
+<div style="position:relative;">
+<input id="desc" placeholder="Buscar producto...">
+<div id="sugerenciasProductos" class="sugerencias"></div>
+</div>
 
 <input id="cantidad" type="number" placeholder="Cantidad">
 
@@ -478,6 +514,8 @@ gap:6px;
 
 <div class="card">
 
+<div class="card table-responsive">
+
 <table id="tabla">
 
 <thead>
@@ -500,7 +538,7 @@ gap:6px;
 </div>
 
 
-<div class="total">Total: <span id="total">$0</span></div><br>
+<div class="total">Total: <span id="total">$0</span></div> 
 
 
 <div class="card">
@@ -509,13 +547,12 @@ gap:6px;
 
 <input id="descuento" type="number" value="0" oninput="actualizarTotal()">
 
-</div>
-
-
 <button class="delete" onclick="generarPDF()">PDF</button>
 <button class="whatsapp" onclick="guardarPresupuesto()">Guardar</button>
 </div>
-<div id="historialSeccion" class="seccion">
+
+
+
 <h3>Buscar historial</h3>
 
 <input id="buscar" placeholder="Buscar cliente o número" oninput="cargarHistorial()">
@@ -539,8 +576,9 @@ gap:6px;
 
 <div id="historial"></div>
 </div>
-</div>
 
+
+</div>
 <script>
 let editandoProductoIndex = -1
 if ('serviceWorker' in navigator) {
@@ -624,6 +662,16 @@ cargarProductos()
 renderListaProductos()
 
 }
+function cancelarEdicionProducto(){
+
+editandoProductoIndex = -1
+
+document.getElementById("productoNombre").value = ""
+document.getElementById("productoPrecio").value = ""
+
+document.getElementById("btnCancelarProducto").style.display="none"
+
+}
 function moneda(v){
 return Number(v).toLocaleString("es-AR",{style:"currency",currency:"ARS"})
 }
@@ -664,6 +712,20 @@ cont.appendChild(div)
 })
 
 }
+function editarProductoDesdeLista(i){
+
+let productos = JSON.parse(localStorage.getItem('productos') || "[]")
+
+let p = productos[i]
+
+document.getElementById("productoNombre").value = p.nombre
+document.getElementById("productoPrecio").value = p.precio
+
+editandoProductoIndex = i
+
+document.getElementById("btnCancelarProducto").style.display="inline-block"
+
+}
 function editarClienteDesdeLista(i){
 
 let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
@@ -675,9 +737,63 @@ document.getElementById("telefonoCliente").value = c.telefono
 
 editandoClienteIndex = i
 
+// cambiar botón guardar a modo modificar
+let btn = document.getElementById("btnGuardarCliente")
+btn.classList.remove("whatsapp")
+btn.classList.add("modificar")
+btn.innerText = "Modificar cliente"
+
+// mostrar botón cancelar
+document.getElementById("btnCancelarCliente").style.display="inline-block"
+
+// abrir sección clientes
 mostrarSeccion("clientesSeccion", document.querySelector(".menu button:nth-child(3)"))
 
 }
+let productosCache = []
+
+function cargarProductosCache(){
+productosCache = JSON.parse(localStorage.getItem("productos") || "[]")
+}
+
+document.getElementById("desc").addEventListener("input", function(){
+
+let texto = this.value.toLowerCase()
+let cont = document.getElementById("sugerenciasProductos")
+
+cont.innerHTML=""
+
+if(texto.length<1) return
+
+let resultados = productosCache.filter(p =>
+p.nombre.toLowerCase().includes(texto)
+)
+
+resultados.slice(0,6).forEach(p=>{
+
+let div = document.createElement("div")
+
+div.innerHTML = `
+<strong>${p.nombre}</strong>
+<span style="float:right">$${p.precio}</span>
+`
+
+div.onclick = function(){
+
+document.getElementById("desc").value = p.nombre
+document.getElementById("precio").value = p.precio
+
+cont.innerHTML=""
+
+document.getElementById("cantidad").focus()
+
+}
+
+cont.appendChild(div)
+
+})
+
+})
 function eliminarClienteDesdeLista(i){
 
 if(!confirm("Eliminar cliente?")) return
@@ -834,7 +950,7 @@ function renderTabla() {
             </td>
             <td><input type="number" value="${i.precio}" onchange="editarItem(${index},'precio',this.value)" style="width:90px"></td>
             <td>${moneda(i.totalItem)}</td>
-            <td><button class="delete" onclick="eliminar(${index})">X</button></td>
+            <td><button class="delete icon-btn" onclick="eliminar(${index})">🗑</button></td>
         `;
 
         // Eventos de drag
@@ -918,7 +1034,7 @@ function generarPDF(){
     doc.line(20, startY + 35, 200, startY + 35);
 
     // Sección cliente
-    let cliente = document.getElementById("cliente").value || "-";
+    let cliente = document.getElementById("clienteSelect").selectedOptions[0]?.text || "-";
     doc.setFillColor(240, 240, 240);
     doc.rect(20, startY + 40, 180, 15, "F");
     doc.setFontSize(9);
@@ -997,6 +1113,9 @@ doc.setFontSize(9)
 doc.text("Moneda: Peso argentino (ARS)",200,y+15,{align:"right"})
 
 doc.save("presupuesto_"+numeroFormateado(numero)+".pdf")
+let blob = doc.output("blob")
+
+compartirPDF(blob)
 
 }
 
@@ -1020,7 +1139,9 @@ window.location.href="mailto:?subject=Presupuesto&body="+encodeURIComponent(mens
 
 function guardarPresupuesto(){
 
-let cliente=document.getElementById('cliente').value
+let clienteIndex = document.getElementById('clienteSelect').value
+let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
+let cliente = clientes[clienteIndex]?.nombre || ""
 let subtotal=items.reduce((s,i)=>s+i.totalItem,0)
 
 let descuento=parseFloat(document.getElementById("descuento").value || 0)
@@ -1078,14 +1199,14 @@ localStorage.setItem('presupuesto_num',numero)
 localStorage.setItem('historial',JSON.stringify(historial))
 
 actualizarDashboard()
-cargarHistorial()
 items=[]
 renderTabla()
-actualizarTotal()
-
-document.getElementById("cliente").value=""
+actualizarTotal() 
+document.getElementById("buscar").value=""
+document.getElementById("clienteSelect").value=""
 document.getElementById("desc").value=""
 document.getElementById("descuento").value=0
+cargarHistorial()
 }
 function reiniciarApp(){
 
@@ -1199,7 +1320,9 @@ document.getElementById("productoPrecio").value=""
 
 cargarProductos()
 renderListaProductos()
+document.getElementById("btnCancelarProducto").style.display="none"
 
+cargarProductosCache()
 }
 function cancelarEmpresa(){
 
@@ -1216,6 +1339,23 @@ document.getElementById("empresaForm").style.display="none"
 
 }
 
+}
+function verificarVencimientos() {
+  let historial = JSON.parse(localStorage.getItem("historial") || "[]")
+
+  let hoy = new Date()
+  hoy.setHours(0,0,0,0)
+
+  let vencidos = historial.filter(p => {
+    let [y,m,d] = p.vencimiento.split("-")
+    let venc = new Date(y, m-1, d)
+
+    return venc < hoy && p.estado === "Pendiente"
+  })
+
+  if(vencidos.length){
+    alert("⚠️ Tienes " + vencidos.length + " presupuestos vencidos")
+  }
 }
 function cargarProductos(){
 
@@ -1295,10 +1435,9 @@ cargarHistorial()
 
 }
 function cargarHistorial() {
-    let q = document.getElementById('buscar').value.toLowerCase();
+    let q = document.getElementById('buscar')?.value?.toLowerCase() || "" 
     let historial = JSON.parse(localStorage.getItem('historial') || "[]");
     let cont = document.getElementById('historial');
-
     cont.innerHTML = "";
 
     historial.slice().reverse().forEach((p, i) => {
@@ -1320,6 +1459,11 @@ function cargarHistorial() {
             p.estado = "Vencido";
             localStorage.setItem('historial', JSON.stringify(historial));
         }
+        let diasRestantesx = Math.ceil((venc - hoy) / (1000*60*60*24))
+
+if(diasRestantesx<=3 && diasRestantesx>=0 && p.estado==="Pendiente"){
+p.estado="Próximo"
+}
 
         div.innerHTML = `
         <div>
@@ -1346,17 +1490,19 @@ function cargarHistorial() {
 function duplicar(i){
 
 let historial=JSON.parse(localStorage.getItem('historial')||"[]")
+let clientes=JSON.parse(localStorage.getItem('clientes')||"[]")
 
 let p=historial[i]
 
 items=[...p.items]
 
-document.getElementById('cliente').value=p.cliente
+let index = clientes.findIndex(c => c.nombre === p.cliente)
+
+document.getElementById('clienteSelect').value = index
 
 document.getElementById('descuento').value = p.descuento || 0
 
 renderTabla()
-
 actualizarTotal()
 
 }
@@ -1364,6 +1510,7 @@ actualizarTotal()
 function editar(i){
 
 let historial=JSON.parse(localStorage.getItem('historial')||"[]")
+let clientes=JSON.parse(localStorage.getItem('clientes')||"[]")
 
 let p=historial[i]
 
@@ -1371,12 +1518,13 @@ editandoIndex=i
 
 items=[...p.items]
 
-document.getElementById('cliente').value=p.cliente
+let index = clientes.findIndex(c => c.nombre === p.cliente)
+
+document.getElementById('clienteSelect').value = index
 
 document.getElementById('descuento').value=p.descuento || 0
 
 renderTabla()
-
 actualizarTotal()
 
 }
@@ -1459,7 +1607,15 @@ renderListaClientes()
 document.getElementById("cliente").value=""
 document.getElementById("email").value=""
 document.getElementById("telefonoCliente").value=""
+// restaurar modo normal
+let btn = document.getElementById("btnGuardarCliente")
+btn.classList.remove("modificar")
+btn.classList.add("whatsapp")
+btn.innerText = "Guardar cliente"
 
+document.getElementById("btnCancelarCliente").style.display="none"
+
+editandoClienteIndex = null
 }
 
 
@@ -1692,7 +1848,39 @@ document.getElementById("telefono").value=config.telefono||""
 document.getElementById("emailEmpresa").value=config.email||""
 
 }
+async function compartirPDF(blob){
 
+if(navigator.share){
+
+let file = new File([blob], "presupuesto.pdf", {type:"application/pdf"})
+
+await navigator.share({
+title:"Presupuesto",
+files:[file]
+})
+
+}
+
+}
+function productoMasVendido(){
+
+let historial = JSON.parse(localStorage.getItem("historial") || "[]")
+
+let conteo = {}
+
+historial.forEach(p=>{
+p.items.forEach(i=>{
+conteo[i.desc] = (conteo[i.desc] || 0) + i.cant
+})
+})
+
+let top = Object.entries(conteo).sort((a,b)=>b[1]-a[1])[0]
+
+if(top){
+console.log("Producto más vendido:",top[0])
+}
+
+}
 function editarLogo(){
 
 document.getElementById("empresaForm").style.display="block"
@@ -1713,7 +1901,13 @@ descs.forEach(d=>{
  datalist.appendChild(o)
 })
 }
+document.addEventListener("click",function(e){
 
+if(!e.target.closest("#desc")){
+document.getElementById("sugerenciasProductos").innerHTML=""
+}
+
+})
 function actualizarDashboard(){
 let historial=JSON.parse(localStorage.getItem('historial')||"[]")
 let total=historial.reduce((s,p)=>s+parseFloat(p.total||0),0)
@@ -1747,6 +1941,8 @@ renderHeaderEmpresa()
 revisarVencimientos()
 renderListaClientes()
 renderListaProductos()
+cargarProductosCache()
+verificarVencimientos()
 </script>
 </body>
 </html>
