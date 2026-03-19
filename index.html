@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<link rel="manifest" href="manifest.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6366f1">
 
 <title>Generador de Presupuestos</title>
-
-<link rel="manifest" href="manifest.json">
+ 
 <meta name="theme-color" content="#6366f1">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1556,7 +1557,7 @@ return nombreGuardado === nombre
 })
 
 }
-let editandoClienteIndex = null; // Variable global para saber si estamos editando
+let editandoClienteIndex = -1; // Variable global para saber si estamos editando
 function guardarCliente(){
 
 let nombre = document.getElementById("cliente").value.trim()
@@ -1580,7 +1581,6 @@ return
 /* GUARDAR O MODIFICAR */
 
 if(editandoClienteIndex >= 0){
-
 clientes[editandoClienteIndex] = {
 nombre,
 email,
@@ -1590,7 +1590,6 @@ telefono
 editandoClienteIndex = -1
 
 }else{
-
 clientes.push({
 nombre,
 email,
@@ -1760,8 +1759,7 @@ totalItem
 renderTabla()
 actualizarTotal()
 
-}
-function mostrarSeccion(id,btn){
+}function mostrarSeccion(id,btn){
 
 document.querySelectorAll(".seccion").forEach(s=>{
 s.classList.remove("activa")
@@ -1774,6 +1772,15 @@ b.classList.remove("active")
 })
 
 btn.classList.add("active")
+
+// 🔥 AGREGAR ESTO
+if(id === "clientesSeccion"){
+    renderListaClientes()
+}
+
+if(id === "productosSeccion"){
+    renderListaProductos()
+}
 
 }
 function guardarEmpresa(){
@@ -1944,5 +1951,6 @@ renderListaProductos()
 cargarProductosCache()
 verificarVencimientos()
 </script>
+
 </body>
 </html>
