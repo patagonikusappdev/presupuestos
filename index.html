@@ -162,70 +162,86 @@ margin-right:5px;
     }
     #tabla button{padding:4px 6px;font-size:11px;}
 }
-/* Contenedor principal */
-.menu-container {
-  position: relative;
-  background: white;
-  padding: 10px;
-  border-radius: 14px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-}
-
-/* Botón hamburguesa */
+/* Botón hamburguesa por defecto (desktop) */
 .hamburger {
-  display: none;
-  font-size: 24px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  z-index: 1000; /* aseguramos que esté arriba */
-  position: relative; /* para z-index */
-}
-
-/* Menú horizontal */
-.menu {
-  display: flex;
-  gap: 10px;
-}
-
-/* Botones del menú */
-.menu button {
-  background: transparent;
-  color: #374151;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.menu button.active {
+  font-size: 28px;
   background: #6366f1;
   color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 8px;
+
+  position: fixed; /* siempre fijo */
+  top: 10px;       /* esquina superior en desktop */
+  right: 10px;
+  z-index: 1001;
+  width: auto;     /* ancho automático en desktop */
 }
 
-/* Responsive: pantallas pequeñas */
+/* Hover efecto */
+.hamburger:hover {
+  background: #4f46e5;
+}
+
+/* Overlay menú */
+.menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255,255,255,0.97);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.menu-overlay.show {
+  display: flex;
+}
+
+.menu-overlay button {
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 25px;
+  font-size: 18px;
+  cursor: pointer;
+  width: 80%;
+  max-width: 400px;
+  transition: background 0.3s;
+}
+
+.menu-overlay button:hover {
+  background: #4f46e5;
+}
+
+/* Modo móvil: botón hamburguesa abajo y ancho completo */
 @media (max-width: 768px) {
   .hamburger {
-    display: block; /* ahora siempre visible */
-    background-color: black;
+    width: 100%;      /* ancho completo */
+    left: 0;          /* pegado al borde izquierdo */
+    right: 0;         /* pegado al borde derecho */
+    bottom: 0;        /* pegado abajo */
+    top: auto;        /* anula el top */
+    padding: 4px 0;  /* altura cómoda */
+    border-radius: 0; /* sin bordes redondeados */
   }
-  .menu {
-    flex-direction: column;
-    display: none; /* oculto por defecto */
-    gap: 10px;
-    margin-top: 10px;
-    background: white;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    z-index: 999; /* aseguramos que esté sobre otros elementos */
-    position: absolute; /* se despliega sobre contenido */
-    top: 50px; /* justo debajo del botón hamburguesa */
-    left: 10px;
-    right: 10px;
-  }
-  .menu.show {
-    display: flex;
-  }
+}
+
+/* Botón cerrar */
+.close-btn {
+  background: transparent;
+  color: #6366f1;
+  font-size: 16px;
+  width: auto;
+  padding: 10px 20px;
 }
 
 .sugerencias div{padding:8px;cursor:pointer;border-bottom:1px solid #eee;}
@@ -270,18 +286,19 @@ border-bottom:1px solid #eee;
 
 <h1>Presupuestos</h1>
 <div class="menu-container">
-  <!-- Botón hamburguesa para móviles -->
+  <!-- Botón hamburguesa -->
   <button class="hamburger" onclick="toggleMenu()">☰</button>
   
-  <!-- Menú de navegación -->
-  <div class="menu" id="menu">
-    <button onclick="mostrarSeccion('dashboardSeccion',this)" class="active">Dashboard</button>
+  <!-- Menú overlay -->
+  <div class="menu-overlay" id="menu">
+    <button onclick="mostrarSeccion('dashboardSeccion',this)">Dashboard</button>
     <button onclick="mostrarSeccion('presupuestoSeccion',this)">Presupuesto</button>
     <button onclick="mostrarSeccion('clientesSeccion',this)">Clientes</button>
     <button onclick="mostrarSeccion('productosSeccion',this)">Productos</button>
     <button onclick="mostrarSeccion('historialSeccion',this)">Historial</button>
     <button onclick="mostrarSeccion('plantillasSeccion',this)">Plantillas</button>
     <button onclick="mostrarSeccion('empresaSeccion',this)">Configuración</button>
+    <button class="close-btn" onclick="toggleMenu()">✕ Cerrar</button>
   </div>
 </div>
 <div id="plantillasSeccion" class="seccion">
@@ -1008,12 +1025,9 @@ function toggleMenu() {
   menu.classList.toggle('show');
 }
 // Cerrar menú al hacer clic en cualquier opción (solo en móviles)
-document.querySelectorAll('#menu button').forEach(button => {
+document.querySelectorAll('.menu-overlay button:not(.close-btn)').forEach(button => {
   button.addEventListener('click', () => {
-    const menu = document.getElementById('menu');
-    if (menu.classList.contains('show')) {
-      menu.classList.remove('show');
-    }
+    document.getElementById('menu').classList.remove('show');
   });
 });
 function dragEnd(e) {
