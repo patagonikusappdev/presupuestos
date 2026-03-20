@@ -162,26 +162,70 @@ margin-right:5px;
     }
     #tabla button{padding:4px 6px;font-size:11px;}
 }
-/* MENU */
-.menu{
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
-  background:white;
-  padding:10px;
-  border-radius:14px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.05);
+/* Contenedor principal */
+.menu-container {
+  position: relative;
+  background: white;
+  padding: 10px;
+  border-radius: 14px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
-.menu button{  background:transparent;  color:#374151;}
-.menu button.active{  background:#6366f1;  color:white;}
-.sugerencias{
-position:absolute;
-background:white;
-border:1px solid #ddd;
-width:100%;
-max-height:200px;
-overflow-y:auto;
-z-index:100;
+
+/* Botón hamburguesa */
+.hamburger {
+  display: none;
+  font-size: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1000; /* aseguramos que esté arriba */
+  position: relative; /* para z-index */
+}
+
+/* Menú horizontal */
+.menu {
+  display: flex;
+  gap: 10px;
+}
+
+/* Botones del menú */
+.menu button {
+  background: transparent;
+  color: #374151;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.menu button.active {
+  background: #6366f1;
+  color: white;
+}
+
+/* Responsive: pantallas pequeñas */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block; /* ahora siempre visible */
+    background-color: black;
+  }
+  .menu {
+    flex-direction: column;
+    display: none; /* oculto por defecto */
+    gap: 10px;
+    margin-top: 10px;
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 999; /* aseguramos que esté sobre otros elementos */
+    position: absolute; /* se despliega sobre contenido */
+    top: 50px; /* justo debajo del botón hamburguesa */
+    left: 10px;
+    right: 10px;
+  }
+  .menu.show {
+    display: flex;
+  }
 }
 
 .sugerencias div{padding:8px;cursor:pointer;border-bottom:1px solid #eee;}
@@ -225,16 +269,20 @@ border-bottom:1px solid #eee;
 <div class="container">
 
 <h1>Presupuestos</h1>
-<div class="menu">
-
-<button onclick="mostrarSeccion('dashboardSeccion',this)" class="active">Dashboard</button>
-<button onclick="mostrarSeccion('presupuestoSeccion',this)">Presupuesto</button>
-<button onclick="mostrarSeccion('clientesSeccion',this)">Clientes</button>
-<button onclick="mostrarSeccion('productosSeccion',this)">Productos</button>
-<button onclick="mostrarSeccion('historialSeccion',this)">Historial</button>
-<button onclick="mostrarSeccion('plantillasSeccion',this)">Plantillas</button>
-<button onclick="mostrarSeccion('empresaSeccion',this)">Configuración</button>
-
+<div class="menu-container">
+  <!-- Botón hamburguesa para móviles -->
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+  
+  <!-- Menú de navegación -->
+  <div class="menu" id="menu">
+    <button onclick="mostrarSeccion('dashboardSeccion',this)" class="active">Dashboard</button>
+    <button onclick="mostrarSeccion('presupuestoSeccion',this)">Presupuesto</button>
+    <button onclick="mostrarSeccion('clientesSeccion',this)">Clientes</button>
+    <button onclick="mostrarSeccion('productosSeccion',this)">Productos</button>
+    <button onclick="mostrarSeccion('historialSeccion',this)">Historial</button>
+    <button onclick="mostrarSeccion('plantillasSeccion',this)">Plantillas</button>
+    <button onclick="mostrarSeccion('empresaSeccion',this)">Configuración</button>
+  </div>
 </div>
 <div id="plantillasSeccion" class="seccion">
   <h3>Plantillas</h3>
@@ -268,6 +316,7 @@ border-bottom:1px solid #eee;
   </div>
 </div>
 <div id="dashboardSeccion" class="seccion activa">
+    <br>
 <div class="dashboard" id="dashboard"></div>
 </div>
 
@@ -954,6 +1003,19 @@ function eliminarProducto() {
     document.getElementById("productoPrecio").value = "";
     select.value = ""; // reset del select
 }
+function toggleMenu() {
+  const menu = document.getElementById('menu');
+  menu.classList.toggle('show');
+}
+// Cerrar menú al hacer clic en cualquier opción (solo en móviles)
+document.querySelectorAll('#menu button').forEach(button => {
+  button.addEventListener('click', () => {
+    const menu = document.getElementById('menu');
+    if (menu.classList.contains('show')) {
+      menu.classList.remove('show');
+    }
+  });
+});
 function dragEnd(e) {
     e.currentTarget.style.opacity = '1';
     draggedIndex = null;
