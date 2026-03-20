@@ -5,83 +5,25 @@
 <link rel="manifest" href="manifest.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#6366f1">
-
-<title>Generador de Presupuestos</title>
- 
-<meta name="theme-color" content="#6366f1">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
+<title>Generador de Presupuestos</title> 
+<script src="libs/jspdf.umd.min.js"></script>
 <style>
-.table-responsive{
-overflow-x:auto;
--webkit-overflow-scrolling:touch;
-}
-
-#tabla{
-min-width:650px;
-}
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
-
-body{
-font-family:Inter,system-ui;
-background:#f3f4f6;
-color:#111827;
-padding:30px;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-}
-
-h1{
-font-size:28px;
-margin-bottom:20px;
-}
-
-h3{
-margin-top:35px;
-margin-bottom:10px;
-font-size:17px;
-color:#374151;
-}
-
-/* cards */
-
-.card{
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 6px 18px rgba(0,0,0,0.06);
-margin-bottom:20px;
-}
-
+*{    box-sizing:border-box;    margin:0;    padding:0;}
+body{    font-family:Inter,system-ui;    background:#f3f4f6;    color:#111827;    padding:30px;}
+h1{    font-size:28px;    margin-bottom:20px;}
+h3{    margin-top:35px;    margin-bottom:10px;    font-size:17px;    color:#374151;}
 /* inputs */
-
 input,select{
-width:100%;
-padding:10px;
-border-radius:8px;
+width:100%;  
 border:1px solid #d1d5db;
 margin-top:6px;
-margin-bottom:6px;
-font-size:14px;
+margin-bottom:6px; 
+padding:12px;
+font-size:15px;
+border-radius:10px;
 }
-
-input:focus,select:focus{
-outline:none;
-border-color:#6366f1;
-box-shadow:0 0 0 2px rgba(99,102,241,0.2);
-}
-
+input:focus,select:focus{outline:none;border-color:#6366f1;box-shadow:0 0 0 2px rgba(99,102,241,0.2);}
 /* botones */
-
 button{
 padding:10px 14px;
 border:none;
@@ -93,59 +35,33 @@ cursor:pointer;
 transition:0.2s;
 margin-top:8px;
 }
-
-button:hover{
-background:#4f46e5;
-transform:scale(1.03);
+button:hover{background:#4f46e5;transform:scale(1.03);}
+/* cards */
+.card{
+  background:white;
+  padding:18px;
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.06);
+  margin-bottom:15px;
+  transition:.2s;
 }
-
-.delete{
-background:#ef4444;
-}
-
-.delete:hover{
-background:#dc2626;
-}
-
-.whatsapp{
-background:#22c55e;
-}
-
-.whatsapp:hover{
-background:#16a34a;
-}
-
-.modificar{
-background:#facc15;
-color:black;
-}
-
-.modificar:hover{
-background:#eab308;
-}
+.card:hover{  transform:translateY(-2px);}
+.container{    max-width:1200px;    margin:auto;}
+.table-responsive{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+#tabla{min-width:650px;}
+.delete{background:#ef4444;}
+.delete:hover{background:#dc2626;}
+.whatsapp{background:#22c55e;}
+.whatsapp:hover{background:#16a34a;}
+.modificar{background:#facc15;color:black;}
+.modificar:hover{background:#eab308;}
 
 /* dashboard */
-
-.dashboard{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:15px;
-margin-bottom:20px;
-}
-
-.dashboard .card{
-text-align:center;
-font-size:16px;
-}
-
-.dashboard strong{
-font-size:24px;
-display:block;
-margin-top:5px;
-}
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:20px;}
+.dashboard .card{text-align:center;font-size:16px;}
+.dashboard strong{font-size:24px;display:block;margin-top:5px;}
 
 /* tabla */
-
 table{
 width:100%;
 border-collapse:collapse;
@@ -154,25 +70,11 @@ background:white;
 border-radius:10px;
 overflow:hidden;
 }
-
-th{
-background:#f9fafb;
-text-align:left;
-font-size:13px;
-padding:12px;
-}
-
-td{
-padding:10px;
-border-top:1px solid #eee;
-}
-
-tbody tr:hover{
-background:#fafafa;
-}
+th{background:#f9fafb;text-align:left;font-size:13px;padding:12px;}
+td{padding:10px;border-top:1px solid #eee;}
+tbody tr:hover{background:#fafafa;}
 
 /* filas agregar item */
-
 .row{
 display:grid;
 grid-template-columns:2fr 1fr 1fr 1fr;
@@ -181,15 +83,15 @@ margin-top:10px;
 }
 
 /* total */
-
 .total{
-font-size:24px;
-font-weight:600;
-margin-top:15px;
+font-size:26px;
+background:#111827;
+color:white;
+padding:12px;
+border-radius:10px;
+text-align:right;
 }
-
 /* historial */
-
 .history-item{
 display:flex;
 justify-content:space-between;
@@ -204,36 +106,13 @@ flex-wrap:wrap;
 }
 
 /* estados */
-
-.estado{
-padding:3px 8px;
-border-radius:6px;
-font-size:12px;
-font-weight:600;
-}
-
-.estado-pendiente{
-background:#fef3c7;
-color:#92400e;
-}
-
-.estado-aprobado{
-background:#dcfce7;
-color:#166534;
-}
-
-.estado-rechazado{
-background:#fee2e2;
-color:#991b1b;
-}
-
-.estado-vencido{
-background:#e5e7eb;
-color:#374151;
-}
+.estado{padding:3px 8px;border-radius:6px;font-size:12px;font-weight:600;}
+.estado-pendiente{background:#fef3c7;color:#92400e;}
+.estado-aprobado{background:#dcfce7;color:#166534;}
+.estado-rechazado{background:#fee2e2;color:#991b1b;}
+.estado-vencido{background:#e5e7eb;color:#374151;}
 
 /* header empresa */
-
 .empresa-header{
 background:white;
 border-radius:12px;
@@ -244,17 +123,10 @@ align-items:center;
 gap:15px;
 box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
-
-.empresa-header img{
-height:40px;
-}
-
-.empresa-header .nombre{
-font-weight:600;
-}
+.empresa-header img{height:40px;}
+.empresa-header .nombre{font-weight:600;}
 
 /* filtros */
-
 .filtro-btn{
 background:#e5e7eb;
 color:#111;
@@ -265,44 +137,43 @@ margin-right:5px;
 }
 
 /* responsive */
-
 @media (max-width:768px){
-  .row{
-    grid-template-columns:1fr;
-  }
-   .row input,
-  .row select{
-    width:100%;
-  }
-#tabla th{
-font-size:11px;
-padding:8px;
-}
-
-#tabla td{
-padding:6px;
-font-size:12px;
-}
-
-#tabla input{
-width:65px;
-padding:5px;
-font-size:12px;
-}
-
-#tabla select{
-width:75px;
-padding:5px;
-font-size:12px;
-}
-
-#tabla button{
-padding:4px 6px;
-font-size:11px;
-}
-
+    .cliente-datos,
+    .producto-info{    font-size:13px;  }
+    .icon-btn{    padding:5px 8px;    font-size:12px;  }
+    .row{    grid-template-columns:1fr;  }
+    .row input,
+    .row select{    width:100%;  } 
+    #tabla td{padding:6px;font-size:12px;}
+    #tabla input{width:65px;padding:5px;font-size:12px;}
+    #tabla select{width:75px;padding:5px;font-size:12px;}
+    .cliente-item,
+    .producto-item{  display:flex;  justify-content:space-between;  align-items:center;  gap:10px;}
+    .cliente-botones,
+    .producto-botones{  display:flex;  gap:6px;  flex-shrink:0;}
+    .cliente-datos,
+    .producto-info{  flex:1;  min-width:0;  overflow:hidden;}
+    .cliente-datos strong,
+    .producto-info strong{
+      display:block;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    #tabla button{padding:4px 6px;font-size:11px;}
 }
 /* MENU */
+.menu{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  background:white;
+  padding:10px;
+  border-radius:14px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+.menu button{  background:transparent;  color:#374151;}
+.menu button.active{  background:#6366f1;  color:white;}
 .sugerencias{
 position:absolute;
 background:white;
@@ -313,41 +184,11 @@ overflow-y:auto;
 z-index:100;
 }
 
-.sugerencias div{
-padding:8px;
-cursor:pointer;
-border-bottom:1px solid #eee;
-}
-
-.sugerencias div:hover{
-background:#f3f4f6;
-}
-.menu{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-bottom:20px;
-}
-
-.menu button{
-background:#e5e7eb;
-color:#111;
-}
-
-.menu button.active{
-background:#6366f1;
-color:white;
-}
-
+.sugerencias div{padding:8px;cursor:pointer;border-bottom:1px solid #eee;}
+.sugerencias div:hover{background:#f3f4f6;}
 /* secciones */
-
-.seccion{
-display:none;
-}
-
-.seccion.activa{
-display:block;
-}
+.seccion{display:none;}
+.seccion.activa{display:block;}
 .cliente-item{
 display:flex;
 justify-content:space-between;
@@ -356,23 +197,10 @@ padding:10px;
 border-bottom:1px solid #eee;
 }
 
-.cliente-item:last-child{
-border-bottom:none;
-}
-
-.cliente-datos{
-font-size:14px;
-}
-
-.cliente-botones{
-display:flex;
-gap:6px;
-}
-
-.icon-btn{
-padding:6px 10px;
-font-size:13px;
-}
+.cliente-item:last-child{border-bottom:none;}
+.cliente-datos{font-size:14px;}
+.cliente-botones{display:flex;gap:6px;}
+.icon-btn{padding:6px 10px;font-size:13px;}
 .producto-item{
 display:flex;
 justify-content:space-between;
@@ -380,19 +208,13 @@ align-items:center;
 padding:10px;
 border-bottom:1px solid #eee;
 }
-
-.producto-item:last-child{
-border-bottom:none;
-}
-
-.producto-info{
-font-size:14px;
-}
-
-.producto-botones{
-display:flex;
-gap:6px;
-}
+.producto-item:last-child{border-bottom:none;}
+.producto-info{font-size:14px;}
+.producto-botones{display:flex;gap:6px;}
+#tabla{border-radius:12px;overflow:hidden;}
+#tabla th{background:#f1f5f9;font-weight:600;}
+#tabla tr{transition:0.2s;}
+#tabla tr:hover{background:#f9fafb;}
 </style>
 </head>
 
@@ -409,8 +231,41 @@ gap:6px;
 <button onclick="mostrarSeccion('presupuestoSeccion',this)">Presupuesto</button>
 <button onclick="mostrarSeccion('clientesSeccion',this)">Clientes</button>
 <button onclick="mostrarSeccion('productosSeccion',this)">Productos</button>
-<button onclick="mostrarSeccion('empresaSeccion',this)">Empresa</button>
+<button onclick="mostrarSeccion('historialSeccion',this)">Historial</button>
+<button onclick="mostrarSeccion('plantillasSeccion',this)">Plantillas</button>
+<button onclick="mostrarSeccion('empresaSeccion',this)">Configuración</button>
 
+</div>
+<div id="plantillasSeccion" class="seccion">
+  <h3>Plantillas</h3>
+
+  <div class="card">
+    <input id="plantillaNombre" placeholder="Nombre de plantilla">  </div>
+
+  <div class="card">
+    <h3>Items de la plantilla</h3>
+    <button onclick="agregarItemPlantilla()">Agregar item</button>
+    <button class="whatsapp" onclick="guardarPlantilla()">Guardar plantilla</button>
+    <button class="delete" onclick="cancelarPlantilla()" id="btnCancelarPlantilla" style="display:none">Cancelar</button>
+    <div class="row">
+      <input id="p_desc" placeholder="Descripción">
+      <input id="p_cantidad" type="number" placeholder="Cantidad">
+      <select id="p_unidad">
+        <option value="">Elegí unidad de medida</option>
+        <option value="kg">kg</option>
+        <option value="m">m</option>
+        <option value="m2">m²</option>
+        <option value="unidad">unidad</option>
+      </select>
+      <input id="p_precio" type="number" placeholder="Precio">
+    </div>
+    <div id="listaItemsPlantilla"></div>
+  </div>
+
+  <div class="card">
+    <h3>Plantillas guardadas</h3>
+    <div id="listaPlantillas"></div>
+  </div>
 </div>
 <div id="dashboardSeccion" class="seccion activa">
 <div class="dashboard" id="dashboard"></div>
@@ -419,8 +274,22 @@ gap:6px;
 <div id="logoContainer"></div>
 
 <div id="empresaSeccion" class="seccion">
-<h3>Empresa</h3>
+<h3>Sistema</h3>
+<div class="card"> 
+<button class="whatsapp" onclick="descargarBackup()">Descargar Backup</button>
+</div>
 
+<div class="card" style=" margin-top:20px;">
+  <h3>Restaurar Backup desde archivo</h3>
+  <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+    <input type="file" id="inputBackup" accept=".json" style="flex:1;"/>
+    <button class="whatsapp" onclick="restaurarBackupDesdeArchivo()">Restaurar</button>
+  </div>
+  <small style="color:#6b7280; display:block; margin-top:5px;">
+    Selecciona un archivo JSON exportado para restaurar los datos.
+  </small>
+</div>
+<h3>Empresa</h3>
 <div class="card" id="empresaForm">
 
 <input id="empresa" placeholder="Nombre empresa">
@@ -431,7 +300,7 @@ gap:6px;
 
 <input type="file" id="logoInput">
 
-<button class="whatsapp" onclick="guardarEmpresa()">Guardar configuración</button>
+<button class="whatsapp" onclick="guardarEmpresa()">Guardar empresa</button>
 <button onclick="cancelarEmpresa()" class="delete">Cancelar</button>
 
 </div>
@@ -442,17 +311,11 @@ gap:6px;
 <h3>Cliente</h3>
 
 <div class="card">
-
 <input id="cliente" placeholder="Nombre y apellido">
-
 <input id="email" placeholder="Email">
-
 <input id="telefonoCliente" placeholder="Teléfono cliente">
-
 <button class="whatsapp" id="btnGuardarCliente" onclick="guardarCliente()">Guardar cliente</button>
-
 <button class="delete" id="btnCancelarCliente" style="display:none" onclick="cancelarEdicionCliente()">Cancelar edición</button>
-
 <!--<button class="delete" onclick="eliminarClienteSeleccionado()">Eliminar cliente</button>--> <br>
 
 <h3>Clientes guardados</h3>
@@ -467,15 +330,10 @@ gap:6px;
 <h3>Productos</h3>
 
 <div class="card">
-
 <input id="productoNombre" placeholder="Nombre producto o servicio" maxlength="35">
-
 <input id="productoPrecio" type="number" placeholder="Precio base">
-
 <button class="whatsapp" id="btnGuardarProducto" onclick="guardarProducto()">Guardar producto</button>
-
 <button class="delete" id="btnCancelarProducto" style="display:none" onclick="cancelarEdicionProducto()">Cancelar edición</button>
-
 <!--<button class="delete" onclick="eliminarProducto()">Eliminar producto</button>--><br>
 <h3>Productos guardados</h3>
 
@@ -485,7 +343,29 @@ gap:6px;
 </div>
 
 </div>
+
+<div id="historialSeccion" class="seccion">
+
+<h3>Buscar historial</h3>
+
+<input id="buscar" placeholder="Buscar cliente o número" oninput="cargarHistorial()">
+
+<div style="margin-top:10px;margin-bottom:10px">
+<button class="filtro-btn" onclick="filtrarEstado('todos')">Todos</button>
+<button class="filtro-btn" onclick="filtrarEstado('Pendiente')">Pendientes</button>
+<button class="filtro-btn" onclick="filtrarEstado('Aprobado')">Aprobados</button>
+<button class="filtro-btn" onclick="filtrarEstado('Rechazado')">Rechazados</button>
+<button class="filtro-btn" onclick="filtrarEstado('Vencido')">Vencidos</button>
+</div>
+
+<h3>Historial</h3>
+<div id="historial"></div>
+    </div>
 <div id="presupuestoSeccion" class="seccion">
+    <h3>Elije Plantilla</h3>
+    <select id="plantillaSelect" onchange="aplicarPlantilla(this.value)">
+  <option value="">Cargar plantilla</option>
+</select>
     <h3>Elije cliente</h3>
     <select id="clienteSelect" class="cliente"></select><br>
 <h3>Agregar item</h3>
@@ -545,7 +425,7 @@ gap:6px;
 </div>
 
 
-<div class="total">Total: <span id="total">$0</span></div> 
+<div class="total">💰 Total: <span id="total">$0</span></div> 
 
 
 <div class="card">
@@ -554,39 +434,20 @@ gap:6px;
 
 <input id="descuento" type="number" value="0" oninput="actualizarTotal()">
 
+
+
+<button class="whatsapp" onclick="enviarWhatsAppCliente()">  Enviar por WhatsApp</button>
 <button class="delete" onclick="generarPDF()">PDF</button>
-<button class="whatsapp" onclick="guardarPresupuesto()">Guardar</button>
+<button  onclick="guardarPresupuesto()">Guardar</button>
 </div>
 
-
-
-<h3>Buscar historial</h3>
-
-<input id="buscar" placeholder="Buscar cliente o número" oninput="cargarHistorial()">
-
-<div style="margin-top:10px;margin-bottom:10px">
-
-<button class="filtro-btn" onclick="filtrarEstado('todos')">Todos</button>
-
-<button class="filtro-btn" onclick="filtrarEstado('Pendiente')">Pendientes</button>
-
-<button class="filtro-btn" onclick="filtrarEstado('Aprobado')">Aprobados</button>
-
-<button class="filtro-btn" onclick="filtrarEstado('Rechazado')">Rechazados</button>
-
-<button class="filtro-btn" onclick="filtrarEstado('Vencido')">Vencidos</button>
-
 </div>
-
-
-<h3>Historial</h3>
-
-<div id="historial"></div>
-</div>
-
 
 </div>
 <script>
+    let plantillas = JSON.parse(localStorage.getItem("plantillas") || "[]")
+let itemsPlantilla = []
+let editandoPlantillaIndex = -1
 let editandoProductoIndex = -1
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
@@ -598,6 +459,224 @@ let editandoIndex = null
 let items=[]
 let historial=JSON.parse(localStorage.getItem('historial')||"[]")
 let numero = historial.length ? historial[historial.length-1].numero+1 : 1
+
+function agregarItemPlantilla(){
+  let desc = p_desc.value
+  let cantidad = +p_cantidad.value
+  let unidad = p_unidad.value
+  let precio = +p_precio.value
+
+  if(!desc || !cantidad || !unidad || !precio){
+    alert("Completa todos los campos")
+    return
+  }
+
+  itemsPlantilla.push({desc,cantidad,unidad,precio})
+
+  renderItemsPlantilla()
+
+  p_desc.value=""
+  p_cantidad.value=""
+  p_unidad.value=""
+  p_precio.value=""
+}
+function restaurarBackupDesdeArchivo() {
+    const input = document.getElementById('inputBackup');
+    if (!input.files || input.files.length === 0) return alert("Selecciona un archivo JSON");
+
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        try {
+            const backup = JSON.parse(event.target.result);
+
+            // Iteramos todas las claves y restauramos
+            for (let key in backup) {
+                if (backup[key] !== null) localStorage.setItem(key, JSON.stringify(backup[key]));
+            }
+
+            alert("Backup restaurado ✔️");
+            location.reload();
+        } catch (e) {
+            console.error(e);
+            alert("Error al leer el archivo JSON. Asegúrate de que sea un backup válido.");
+        }
+    };
+
+    reader.readAsText(file);
+}
+function backupAutomatico() {
+    // Tomamos TODO lo que está en localStorage
+    const data = {
+        clientes: localStorage.getItem('clientes'),
+        productos: localStorage.getItem('productos'),
+        plantillas: localStorage.getItem('plantillas'),
+        historial: localStorage.getItem('historial'),
+        empresa_config: localStorage.getItem('empresa_config'),
+        logo: localStorage.getItem('logo'),
+        descripcion: localStorage.getItem('descripciones')
+    };
+
+    // Guardamos backup en localStorage también
+    localStorage.setItem('backup_auto', JSON.stringify(data));
+
+    console.log('Backup automático guardado ✔️');
+}
+function enviarWhatsAppCliente(){
+
+  let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
+  let clienteIndex = document.getElementById('clienteSelect').value
+
+  if(clienteIndex === ""){
+    alert("Selecciona un cliente")
+    return
+  }
+
+  let clienteData = clientes[clienteIndex]
+
+  if(!clienteData.telefono || clienteData.telefono === "-"){
+    alert("El cliente no tiene teléfono")
+    return
+  }
+
+  let telefono = clienteData.telefono
+  let totalTexto = document.getElementById('total').innerText
+  let texto = `PRESUPUESTO\n\n`;
+texto += `Cliente: ${clienteData.nombre}\n\n`;
+texto += `Detalle:\n\n`;
+items.forEach(i=>{
+  texto += `- ${i.desc}\n`;
+  texto += `  ${i.cantidad} x $${i.precio} = $${i.totalItem}\n\n`;
+});
+
+texto += `-----------------------\n`;
+texto += `TOTAL: ${totalTexto}\n\n`;
+texto += `Gracias por tu consulta`;
+
+  let url = `https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`
+  window.open(url, "_blank")
+}
+function renderItemsPlantilla(){
+  const cont = document.getElementById("listaItemsPlantilla")
+  cont.innerHTML = ""
+
+  itemsPlantilla.forEach((item, i) => {
+    cont.innerHTML += `
+      <div style="display:flex; gap:5px; margin-bottom:5px;">
+        <input value="${item.desc}"  onchange="editarItemPlantilla(${i}, 'desc', this.value)">
+        <input type="number" value="${item.cantidad}"  onchange="editarItemPlantilla(${i}, 'cantidad', this.value)">
+        <input value="${item.unidad}"  onchange="editarItemPlantilla(${i}, 'unidad', this.value)">
+        <input type="number" value="${item.precio}"  onchange="editarItemPlantilla(${i}, 'precio', this.value)">
+        <button onclick="eliminarItemPlantilla(${i})">❌</button>
+      </div>
+    `
+  })
+}
+
+function eliminarItemPlantilla(i){
+  itemsPlantilla.splice(i,1)
+  renderItemsPlantilla()
+}
+function guardarPlantilla(){
+  let nombre = plantillaNombre.value.trim()
+
+  if(!nombre){
+    alert("Nombre requerido")
+    return
+  }
+
+  if(itemsPlantilla.length === 0){
+    alert("Agrega al menos un item")
+    return
+  }
+
+  if(editandoPlantillaIndex >= 0){
+    plantillas[editandoPlantillaIndex] = {nombre, items: itemsPlantilla}
+    editandoPlantillaIndex = -1
+  }else{
+    plantillas.push({nombre, items: itemsPlantilla})
+  }
+
+  localStorage.setItem("plantillas", JSON.stringify(plantillas))
+
+  plantillaNombre.value=""
+  itemsPlantilla=[]
+  renderItemsPlantilla()
+  renderListaPlantillas()
+
+  btnCancelarPlantilla.style.display="none"
+}
+function cargarPlantillasSelect(){
+  let select = document.getElementById("plantillaSelect")
+  if(!select) return
+
+  select.innerHTML = '<option value="">Cargar plantilla</option>'
+
+  plantillas.forEach((p,i)=>{
+    let o=document.createElement("option")
+    o.value=i
+    o.textContent=p.nombre
+    select.appendChild(o)
+  })
+}
+function aplicarPlantilla(index){
+  if(index==="") return
+  let p = plantillas[index]
+  items = p.items.map(i=>({
+    ...i,
+    totalItem: i.precio * i.cantidad
+  }))
+
+  renderTabla()
+  actualizarTotal()
+}
+
+function renderListaPlantillas(){
+  let cont = document.getElementById("listaPlantillas")
+  cont.innerHTML=""
+
+  plantillas.forEach((p,i)=>{
+    let div=document.createElement("div")
+    div.className="cliente-item"
+
+    div.innerHTML = `
+      <div class="cliente-datos">
+        <strong>${p.nombre}</strong><br>
+        ${p.items.length} items
+      </div>
+      <div class="cliente-botones">
+        <button class="modificar" onclick="editarPlantilla(${i})">✏️</button>
+        <button class="delete" onclick="eliminarPlantilla(${i})">🗑</button>
+      </div>
+    `
+    cont.appendChild(div)
+  })
+}
+function editarPlantilla(i){
+  let p = plantillas[i]
+
+  plantillaNombre.value = p.nombre
+  itemsPlantilla = [...p.items]
+  editandoPlantillaIndex = i
+  renderItemsPlantilla()
+  btnCancelarPlantilla.style.display="inline-block"
+}
+function eliminarPlantilla(i){
+  if(!confirm("Eliminar plantilla?")) return
+  plantillas.splice(i,1)
+  localStorage.setItem("plantillas", JSON.stringify(plantillas))
+  renderListaPlantillas()
+}
+
+function cancelarPlantilla(){
+  editandoPlantillaIndex = -1
+  plantillaNombre.value=""
+  itemsPlantilla=[]
+  renderItemsPlantilla()
+  btnCancelarPlantilla.style.display="none"
+}
+
 function filtrarEstado(estado){
 
 filtroEstado=estado
@@ -605,77 +684,54 @@ filtroEstado=estado
 cargarHistorial()
 
 }
+function irAPresupuesto(){
+  const btn = document.querySelector(".menu button:nth-child(2)")
+  mostrarSeccion("presupuestoSeccion", btn)
+  window.scrollTo({ top: 0, behavior: "smooth" })
+}
 function renderListaProductos(){
-
 let productos = JSON.parse(localStorage.getItem('productos') || "[]")
-
 let cont = document.getElementById("listaProductos")
-
 if(!cont) return
-
 cont.innerHTML=""
-
 productos.forEach((p,i)=>{
-
 let div=document.createElement("div")
 
 div.className="producto-item"
-
 div.innerHTML=`
-
 <div class="producto-info">
 <strong>${p.nombre}</strong><br>
 $${p.precio}
 </div>
-
 <div class="producto-botones">
-
 <button class="modificar icon-btn" onclick="editarProductoDesdeLista(${i})">✏️</button>
-
 <button class="delete icon-btn" onclick="eliminarProductoDesdeLista(${i})">🗑</button>
-
 </div>
-
 `
-
 cont.appendChild(div)
-
 })
 
 }
 function editarProductoDesdeLista(i){
-
 let productos = JSON.parse(localStorage.getItem('productos') || "[]")
-
 let p = productos[i]
-
 document.getElementById("productoNombre").value = p.nombre
 document.getElementById("productoPrecio").value = p.precio
-
 editandoProductoIndex = i
 
 }
 function eliminarProductoDesdeLista(i){
-
 if(!confirm("Eliminar producto?")) return
-
 let productos = JSON.parse(localStorage.getItem('productos') || "[]")
-
 productos.splice(i,1)
-
 localStorage.setItem("productos",JSON.stringify(productos))
-
 cargarProductos()
 renderListaProductos()
-
 }
 function cancelarEdicionProducto(){
-
 editandoProductoIndex = -1
-
 document.getElementById("productoNombre").value = ""
 document.getElementById("productoPrecio").value = ""
-
 document.getElementById("btnCancelarProducto").style.display="none"
 
 }
@@ -711,9 +767,7 @@ ${c.email || ""} ${c.telefono ? " • "+c.telefono : ""}
 <button class="icon-btn modificar" onclick="editarClienteDesdeLista(${i})">✏️</button>
 <button class="icon-btn delete" onclick="eliminarClienteDesdeLista(${i})">🗑</button>
 </div>
-
 `
-
 cont.appendChild(div)
 
 })
@@ -749,13 +803,8 @@ let btn = document.getElementById("btnGuardarCliente")
 btn.classList.remove("whatsapp")
 btn.classList.add("modificar")
 btn.innerText = "Modificar cliente"
-
-// mostrar botón cancelar
 document.getElementById("btnCancelarCliente").style.display="inline-block"
-
-// abrir sección clientes
 mostrarSeccion("clientesSeccion", document.querySelector(".menu button:nth-child(3)"))
-
 }
 let productosCache = []
 
@@ -784,16 +833,11 @@ div.innerHTML = `
 <strong>${p.nombre}</strong>
 <span style="float:right">$${p.precio}</span>
 `
-
 div.onclick = function(){
-
 document.getElementById("desc").value = p.nombre
 document.getElementById("precio").value = p.precio
-
 cont.innerHTML=""
-
 document.getElementById("cantidad").focus()
-
 }
 
 cont.appendChild(div)
@@ -804,13 +848,9 @@ cont.appendChild(div)
 function eliminarClienteDesdeLista(i){
 
 if(!confirm("Eliminar cliente?")) return
-
 let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
-
 clientes.splice(i,1)
-
 localStorage.setItem("clientes",JSON.stringify(clientes))
-
 cargarClientes()
 renderListaClientes()
 
@@ -843,15 +883,10 @@ function agregarItem() {
         localStorage.setItem('descripciones', JSON.stringify(descs));
         cargarDescripciones();
     }
-
     let totalItem = precio * cantidad;
-
     items.push({ desc, cantidad, precio, unidad, totalItem });
-
     renderTabla();
     actualizarTotal();
-
-    // Limpiar campos después de agregar item
     document.getElementById('desc').value = "";
     document.getElementById('cantidad').value = "";
     document.getElementById('unidad').value = "";
@@ -892,12 +927,9 @@ function drop(e) {
     e.preventDefault();
     let targetIndex = e.currentTarget.dataset.index;
     if (draggedIndex === null || draggedIndex === targetIndex) return;
-
-    // Reordenar items
     let draggedItem = items[draggedIndex];
     items.splice(draggedIndex, 1); // removemos
     items.splice(targetIndex, 0, draggedItem); // insertamos en nuevo lugar
-
     renderTabla();
 }
 function eliminarProducto() {
@@ -908,23 +940,15 @@ function eliminarProducto() {
         alert("Selecciona un producto para eliminar");
         return;
     }
-
     if (!confirm(`¿Eliminar el producto "${nombre}"?`)) return;
-
-    // Obtener lista de productos
     let productos = JSON.parse(localStorage.getItem("productos") || "[]");
 
-    // Verificar si existe
     if (!productos.some(p => p.nombre === nombre)) {
         alert("El producto no existe");
         return;
     }
-
-    // Filtrar y guardar
     productos = productos.filter(p => p.nombre !== nombre);
     localStorage.setItem("productos", JSON.stringify(productos));
-
-    // Recargar select y limpiar inputs
     cargarProductos();
     document.getElementById("productoNombre").value = "";
     document.getElementById("productoPrecio").value = "";
@@ -942,7 +966,6 @@ function renderTabla() {
         let row = document.createElement('tr');
         row.setAttribute('draggable', true); // Habilita arrastrar
         row.dataset.index = index; // Guardamos el índice original
-
         row.innerHTML = `
             <td><input value="${i.desc}" onchange="editarItem(${index},'desc',this.value)"></td>
             <td><input type="number" value="${i.cantidad}" onchange="editarItem(${index},'cantidad',this.value)" style="width:70px"></td>
@@ -959,8 +982,6 @@ function renderTabla() {
             <td>${moneda(i.totalItem)}</td>
             <td><button class="delete icon-btn" onclick="eliminar(${index})">🗑</button></td>
         `;
-
-        // Eventos de drag
         row.addEventListener('dragstart', dragStart);
         row.addEventListener('dragover', dragOver);
         row.addEventListener('drop', drop);
@@ -983,26 +1004,28 @@ renderTabla()
 actualizarTotal()
 
 }
+function editarItemPlantilla(indexPlantilla, indexItem, campo, valor){
+  if(campo === "cantidad" || campo === "precio"){
+    valor = Number(valor)
+  }
 
+  plantillas[indexPlantilla].items[indexItem][campo] = valor
+
+  localStorage.setItem("plantillas", JSON.stringify(plantillas))
+}
 
 function eliminar(i){items.splice(i,1);renderTabla();actualizarTotal()}
 
 function actualizarTotal(){
-
 let subtotal=items.reduce((s,i)=>s+i.totalItem,0)
-
 let descuento=parseFloat(document.getElementById("descuento")?.value || 0)
-
 let total=subtotal-(subtotal*(descuento/100))
-
 document.getElementById('total').innerText=moneda(total)
-
 }
 
 function generarPDF(){
    const { jsPDF } = window.jspdf;
     let doc = new jsPDF();
-
     let empresa = JSON.parse(localStorage.getItem("empresa_config") || "{}");
     const logo = localStorage.getItem("logo");
 
@@ -1078,15 +1101,10 @@ y+=10
 
 })
 let descuento=parseFloat(document.getElementById("descuento").value || 0)
-
 let montoDescuento=subtotal*(descuento/100)
-
 let subtotalConDescuento=subtotal-montoDescuento
-
 let iva=0//subtotalConDescuento*0.21
-
 let total=subtotalConDescuento+iva
-
 
 y+=10
 
@@ -1170,41 +1188,17 @@ let historial=JSON.parse(localStorage.getItem('historial')||"[]")
 
 if(editandoIndex!==null){
 
-historial[editandoIndex]={
-numero:historial[editandoIndex].numero,
-cliente,
-subtotal,
-descuento,
-total,
-fecha,
-vencimiento,
-estado:historial[editandoIndex].estado,
-items
-}
+historial[editandoIndex]={numero:historial[editandoIndex].numero,cliente,subtotal,descuento,total,fecha,vencimiento,estado:historial[editandoIndex].estado,items}
 
 editandoIndex=null
 
 }else{
-
-historial.push({
-numero,
-cliente,
-subtotal,
-descuento,
-total,
-fecha,
-vencimiento,
-estado:"Pendiente",
-items
-})
-
+historial.push({numero,cliente,subtotal,descuento,total,fecha,vencimiento,estado:"Pendiente",items})
 numero++
 localStorage.setItem('presupuesto_num',numero)
-
 }
 
 localStorage.setItem('historial',JSON.stringify(historial))
-
 actualizarDashboard()
 items=[]
 renderTabla()
@@ -1241,44 +1235,25 @@ return
 }
 
 header.innerHTML=`
-
 ${logo ? `<img src="${logo}">` : ""}
-
 <div class="datos">
-
 <div class="nombre">${config.nombre}</div>
-
 <div>
-
 ${config.cuit ? "CUIT: "+config.cuit : ""}
-
 ${config.direccion ? " • Dirección: "+config.direccion : ""}
-
 ${config.telefono ? " • Tel: "+config.telefono : ""}
-
 ${config.email ? " • Email: "+config.email : ""}
-
 </div>
-
 </div>
-
 `
-
 }
 function productoDuplicado(nombre, indexActual = -1){
-
 let productos = JSON.parse(localStorage.getItem('productos') || "[]")
-
 nombre = nombre.trim().toLowerCase()
-
 return productos.some((p,i)=>{
-
 let nombreGuardado = (p.nombre || "").trim().toLowerCase()
-
 if(i === indexActual) return false
-
 return nombreGuardado === nombre
-
 })
 
 }function guardarProducto(){
@@ -1293,42 +1268,28 @@ return
 
 let productos = JSON.parse(localStorage.getItem('productos') || "[]")
 
-/* VALIDAR DUPLICADO */
-
 if(productoDuplicado(nombre, editandoProductoIndex)){
 alert("Ya existe un producto con ese nombre")
 return
 }
 
-/* GUARDAR O EDITAR */
-
 if(editandoProductoIndex >= 0){
-
 productos[editandoProductoIndex] = {
 nombre,
 precio
 }
-
 editandoProductoIndex = -1
-
 }else{
-
-productos.push({
-nombre,
-precio
-})
-
+productos.push({nombre,precio})
 }
 
 localStorage.setItem("productos",JSON.stringify(productos))
 
 document.getElementById("productoNombre").value=""
 document.getElementById("productoPrecio").value=""
-
 cargarProductos()
 renderListaProductos()
 document.getElementById("btnCancelarProducto").style.display="none"
-
 cargarProductosCache()
 }
 function cancelarEmpresa(){
@@ -1336,27 +1297,20 @@ function cancelarEmpresa(){
 let config = JSON.parse(localStorage.getItem("empresa_config") || "{}")
 
 if(config.nombre){
-
 document.getElementById("empresaForm").style.display="none"
 document.getElementById("empresaCard").style.display="block"
-
 }else{
-
 document.getElementById("empresaForm").style.display="none"
-
 }
 
 }
 function verificarVencimientos() {
   let historial = JSON.parse(localStorage.getItem("historial") || "[]")
-
   let hoy = new Date()
   hoy.setHours(0,0,0,0)
-
   let vencidos = historial.filter(p => {
     let [y,m,d] = p.vencimiento.split("-")
     let venc = new Date(y, m-1, d)
-
     return venc < hoy && p.estado === "Pendiente"
   })
 
@@ -1367,12 +1321,8 @@ function verificarVencimientos() {
 function cargarProductos(){
 
 let productos=JSON.parse(localStorage.getItem("productos") || "[]")
-
 let select=document.getElementById("desc")
-//let lista=document.getElementById("listaProductos")
-
 select.innerHTML='<option value="">Seleccionar producto</option>'
-//lista.innerHTML=""
 
 productos.forEach((p,i)=>{
 
@@ -1380,64 +1330,27 @@ let opt=document.createElement("option")
 opt.value=p.nombre
 opt.textContent=p.nombre
 select.appendChild(opt)
-
-//let optLista=document.createElement("option")
-//optLista.value=i
-//optLista.textContent=p.nombre+" - "+moneda(p.precio)
-//lista.appendChild(optLista)
-
 })
 
 select.onchange=function(){
-
 let prod=productos.find(p=>p.nombre==this.value)
-
 if(prod){
 document.getElementById("precio").value=prod.precio
 }
-
+}
 }
 
-}
-
-function f(){
-
-let select=document.getElementById("desc")
-
-let nombre = select.value
-
-if(nombre==="") return
-
-if(!confirm("Eliminar producto?")) return
-
-let productos=JSON.parse(localStorage.getItem("productos")||"[]")
-
-productos = productos.filter(p => p.nombre !== nombre)
-
-localStorage.setItem("productos",JSON.stringify(productos))
-
-cargarProductos()
-}
 function aprobar(i){
-
 let historial=JSON.parse(localStorage.getItem('historial')||"[]")
-
 historial[i].estado="Aprobado"
-
 localStorage.setItem('historial',JSON.stringify(historial))
-
 cargarHistorial()
-
 }
 
 function rechazar(i){
-
 let historial=JSON.parse(localStorage.getItem('historial')||"[]")
-
 historial[i].estado="Rechazado"
-
 localStorage.setItem('historial',JSON.stringify(historial))
-
 cargarHistorial()
 
 }
@@ -1495,45 +1408,40 @@ p.estado="Próximo"
 }
 
 function duplicar(i){
+  let historial = JSON.parse(localStorage.getItem('historial')||"[]")
+  let clientes = JSON.parse(localStorage.getItem('clientes')||"[]")
+  let p = historial[i]
 
-let historial=JSON.parse(localStorage.getItem('historial')||"[]")
-let clientes=JSON.parse(localStorage.getItem('clientes')||"[]")
+  items = [...p.items]
 
-let p=historial[i]
+  let index = clientes.findIndex(c => c.nombre === p.cliente)
+  document.getElementById('clienteSelect').value = index
+  document.getElementById('descuento').value = p.descuento || 0
 
-items=[...p.items]
+  renderTabla()
+  actualizarTotal()
 
-let index = clientes.findIndex(c => c.nombre === p.cliente)
-
-document.getElementById('clienteSelect').value = index
-
-document.getElementById('descuento').value = p.descuento || 0
-
-renderTabla()
-actualizarTotal()
-
+  // 🔥 IR A PRESUPUESTO
+  irAPresupuesto()
 }
 
 function editar(i){
+  let historial = JSON.parse(localStorage.getItem('historial')||"[]")
+  let clientes = JSON.parse(localStorage.getItem('clientes')||"[]")
+  let p = historial[i]
 
-let historial=JSON.parse(localStorage.getItem('historial')||"[]")
-let clientes=JSON.parse(localStorage.getItem('clientes')||"[]")
+  editandoIndex = i
+  items = [...p.items]
 
-let p=historial[i]
+  let index = clientes.findIndex(c => c.nombre === p.cliente)
+  document.getElementById('clienteSelect').value = index
+  document.getElementById('descuento').value = p.descuento || 0
 
-editandoIndex=i
+  renderTabla()
+  actualizarTotal()
 
-items=[...p.items]
-
-let index = clientes.findIndex(c => c.nombre === p.cliente)
-
-document.getElementById('clienteSelect').value = index
-
-document.getElementById('descuento').value=p.descuento || 0
-
-renderTabla()
-actualizarTotal()
-
+  // 🔥 IR A PRESUPUESTO
+  irAPresupuesto()
 }
 
 
@@ -1547,19 +1455,12 @@ localStorage.setItem('historial',JSON.stringify(historial))
 cargarHistorial()
 }
 function clienteDuplicado(nombre, indexActual = -1){
-
 let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
-
 nombre = nombre.trim().toLowerCase()
-
 return clientes.some((c,i)=>{
-
 let nombreGuardado = (c.nombre || "").trim().toLowerCase()
-
 if(i === indexActual) return false
-
 return nombreGuardado === nombre
-
 })
 
 }
@@ -1571,10 +1472,26 @@ let email = document.getElementById("email").value.trim()
 let telefono = document.getElementById("telefonoCliente").value.trim()
 
 if(!nombre){
-alert("Ingrese nombre del cliente")
-return
+  alert("Ingrese nombre del cliente")
+  return
 }
 
+if(!email && !telefono){
+  alert("Debe ingresar al menos un email o teléfono")
+
+  document.getElementById("email").style.borderColor = "red"
+  document.getElementById("telefonoCliente").style.borderColor = "red"
+
+  return
+}
+if(telefono && !/^\d+$/.test(telefono)){
+  alert("El teléfono debe contener solo números")
+  return
+}
+email = email || "-"
+telefono = telefono || "-"
+document.getElementById("email").style.borderColor = ""
+document.getElementById("telefonoCliente").style.borderColor = ""
 let clientes = JSON.parse(localStorage.getItem('clientes') || "[]")
 
 /* VALIDAR DUPLICADO */
@@ -1587,21 +1504,13 @@ return
 /* GUARDAR O MODIFICAR */
 
 if(editandoClienteIndex >= 0){
-clientes[editandoClienteIndex] = {
-nombre,
-email,
-telefono
-}
-
+clientes[editandoClienteIndex] = {nombre,email,telefono}
 editandoClienteIndex = -1
 
 }else{
-clientes.push({
-nombre,
-email,
-telefono
-})
-
+    if(validarCliente(nombre, email, telefono)){
+clientes.push({nombre,email,telefono})
+}
 }
 
 localStorage.setItem("clientes", JSON.stringify(clientes))
@@ -1648,28 +1557,6 @@ function cargarClientes(){
         o.textContent = c.nombre;
         select.appendChild(o);
     });
-/*
-    select.onchange = function(){
-        let c = clientes[this.value];
-        if(c){
-            document.getElementById('cliente').value = c.nombre;
-            document.getElementById('email').value = c.email;
-            document.getElementById('telefonoCliente').value = c.telefono;
-
-            // Activar modo edición
-            editandoClienteIndex = this.value;
-            document.getElementById('btnCancelarCliente').style.display = "inline-block";
-            
-        } else {
-            // Ningún cliente seleccionado
-            editandoClienteIndex = null;
-            document.getElementById('cliente').value = "";
-            document.getElementById('email').value = "";
-            document.getElementById('telefonoCliente').value = "";
-            document.getElementById('btnCancelarCliente').style.display = "none";
-
-        }
-    }*/
 }
 
 function cancelarEdicionCliente(){
@@ -1677,24 +1564,12 @@ function cancelarEdicionCliente(){
     document.getElementById('cliente').value = "";
     document.getElementById('email').value = "";
     document.getElementById('telefonoCliente').value = "";
-
     document.getElementById('clienteSelect').value = ""; // deseleccionar
-
-    // Restaurar botón guardar
     let btn = document.getElementById('btnGuardarCliente');
     btn.classList.remove('modificar');
     btn.classList.add('whatsapp');
     btn.innerText = "Guardar cliente";
-
-    // Ocultar botón cancelar
     document.getElementById('btnCancelarCliente').style.display = "none";
-}
-function exportarExcel(){
-let historial=JSON.parse(localStorage.getItem('historial')||"[]")
-let ws=XLSX.utils.json_to_sheet(historial)
-let wb=XLSX.utils.book_new()
-XLSX.utils.book_append_sheet(wb,ws,"Presupuestos")
-XLSX.writeFile(wb,"presupuestos.xlsx")
 }
 
 function backupDatos(){
@@ -1709,7 +1584,13 @@ a.href=URL.createObjectURL(blob)
 a.download='backup_presupuestos.json'
 a.click()
 }
-
+function validarCliente(nombre, email, telefono){
+  if(!nombre || nombre.trim() === "") return false
+  const telValido = telefono && /^[0-9]+$/.test(telefono)
+  const emailValido = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  if(!telValido && !emailValido) return false
+  return true
+}
 function importarDatos(e){
 let file=e.target.files[0]
 let reader=new FileReader()
@@ -1723,27 +1604,7 @@ location.reload()
 }
 reader.readAsText(file)
 }
-let plantillas = {
 
-instalacion:[
-{desc:"Mano de obra instalación",cantidad:1,unidad:"unidad",precio:0},
-{desc:"Materiales",cantidad:1,unidad:"unidad",precio:0},
-{desc:"Transporte",cantidad:1,unidad:"unidad",precio:0}
-],
-
-construccion:[
-{desc:"Mano de obra",cantidad:1,unidad:"unidad",precio:0},
-{desc:"Materiales",cantidad:1,unidad:"unidad",precio:0},
-{desc:"Herramientas",cantidad:1,unidad:"unidad",precio:0}
-],
-
-servicio_tecnico:[
-{desc:"Diagnóstico",cantidad:1,unidad:"unidad",precio:0},
-{desc:"Reparación",cantidad:1,unidad:"unidad",precio:0},
-{desc:"Repuestos",cantidad:1,unidad:"unidad",precio:0}
-]
-
-}
 function cargarPlantilla(nombre){
 if(!nombre) return
 items=[]
@@ -1752,21 +1613,13 @@ plantillas[nombre].forEach(p=>{
 
 let totalItem=p.cantidad*p.precio
 
-items.push({
-desc:p.desc,
-cantidad:p.cantidad,
-unidad:p.unidad,
-precio:p.precio,
-totalItem
-})
-
-})
+items.push({desc:p.desc,cantidad:p.cantidad,unidad:p.unidad,precio:p.precio,totalItem})})
 
 renderTabla()
 actualizarTotal()
 
-}function mostrarSeccion(id,btn){
-
+}
+function mostrarSeccion(id,btn){
 document.querySelectorAll(".seccion").forEach(s=>{
 s.classList.remove("activa")
 })
@@ -1778,7 +1631,9 @@ b.classList.remove("active")
 })
 
 btn.classList.add("active")
-
+if(id === "presupuestoSeccion"){
+  cargarPlantillasSelect() // 🔥 AGREGAR
+}
 // 🔥 AGREGAR ESTO
 if(id === "clientesSeccion"){
     renderListaClientes()
@@ -1787,7 +1642,9 @@ if(id === "clientesSeccion"){
 if(id === "productosSeccion"){
     renderListaProductos()
 }
-
+if(id === "plantillasSeccion"){
+  renderListaPlantillas()
+}
 }
 function guardarEmpresa(){
 
@@ -1821,7 +1678,6 @@ function cargarEmpresa(){
 
 let config = JSON.parse(localStorage.getItem("empresa_config") || "{}")
 let logo = localStorage.getItem("logo")
-
 let form=document.getElementById("empresaForm")
 let card=document.getElementById("empresaCard")
 let logoContainer=document.getElementById("logoContainer")
@@ -1835,9 +1691,6 @@ card.innerHTML=`
 <button onclick="editarEmpresa()">Modificar</button>
 <button class="delete" onclick="eliminarEmpresa()">Eliminar configuración</button>
 `
-
-
-
 }else{
 
 form.style.display="block"
@@ -1847,19 +1700,38 @@ logoContainer.innerHTML=""
 
 }
 }
-function editarEmpresa(){
+function restaurarBackup() {
+    const backup = JSON.parse(localStorage.getItem('backup_auto') || '{}');
+    if (!backup) return alert("No hay backup disponible");
 
+    for (let key in backup) {
+        if (backup[key] !== null) localStorage.setItem(key, backup[key]);
+    }
+
+    alert("Backup restaurado ✔️");
+    location.reload();
+}
+function descargarBackup() {
+    const backup = localStorage.getItem('backup_auto');
+    if (!backup) return alert("No hay backup disponible");
+
+    const blob = new Blob([backup], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `backup_presupuestos_${new Date().toISOString()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+function editarEmpresa(){
 document.getElementById("empresaForm").style.display="block"
 document.getElementById("empresaCard").style.display="none"
-
 let config=JSON.parse(localStorage.getItem("empresa_config")||"{}")
-
 document.getElementById("empresa").value=config.nombre||""
 document.getElementById("cuit").value=config.cuit||""
 document.getElementById("direccion").value=config.direccion||""
 document.getElementById("telefono").value=config.telefono||""
 document.getElementById("emailEmpresa").value=config.email||""
-
 }
 async function compartirPDF(blob){
 
@@ -1868,38 +1740,13 @@ if(navigator.share){
 let file = new File([blob], "presupuesto.pdf", {type:"application/pdf"})
 
 await navigator.share({
-title:"Presupuesto",
-files:[file]
-})
-
-}
-
-}
-function productoMasVendido(){
-
-let historial = JSON.parse(localStorage.getItem("historial") || "[]")
-
-let conteo = {}
-
-historial.forEach(p=>{
-p.items.forEach(i=>{
-conteo[i.desc] = (conteo[i.desc] || 0) + i.cant
-})
-})
-
-let top = Object.entries(conteo).sort((a,b)=>b[1]-a[1])[0]
-
-if(top){
-console.log("Producto más vendido:",top[0])
+title:"Presupuesto",files:[file]})
 }
 
 }
 function editarLogo(){
-
 document.getElementById("empresaForm").style.display="block"
-
 }
-
 
 function cargarDescripciones(){
 let descs=JSON.parse(localStorage.getItem('descripciones')||"[]")
@@ -1944,7 +1791,67 @@ localStorage.setItem('logo',e.target.result)
 }
 reader.readAsDataURL(file)
 })
+if(!localStorage.getItem("plantillas")){
+  localStorage.setItem("plantillas", JSON.stringify([
+{
+  nombre: "Limpieza de obra",
+  items: [
+    {desc:"Retiro de escombros", cantidad:1, unidad:"unidad", precio:30000},
+    {desc:"Limpieza profunda", cantidad:1, unidad:"unidad", precio:40000},
+    {desc:"Productos de limpieza", cantidad:1, unidad:"unidad", precio:15000}
+  ]
+},
+{
+  nombre: "Reparaciones generales",
+  items: [
+    {desc:"Diagnóstico", cantidad:1, unidad:"unidad", precio:10000},
+    {desc:"Materiales varios", cantidad:1, unidad:"unidad", precio:20000},
+    {desc:"Mano de obra", cantidad:1, unidad:"unidad", precio:40000}
+  ]
+},
+{
+  nombre: "Pintura interior completa",
+  items: [
+    {desc:"Pintura látex", cantidad:20, unidad:"l", precio:3500},
+    {desc:"Enduido", cantidad:10, unidad:"kg", precio:2000},
+    {desc:"Lijado y preparación", cantidad:1, unidad:"unidad", precio:20000},
+    {desc:"Mano de obra", cantidad:1, unidad:"unidad", precio:85000}
+  ]
+},
+{
+  nombre: "Construcción de muro",
+  items: [
+    {desc:"Ladrillos", cantidad:500, unidad:"unidad", precio:300},
+    {desc:"Cemento", cantidad:10, unidad:"bolsa", precio:12000},
+    {desc:"Arena", cantidad:2, unidad:"m3", precio:25000},
+    {desc:"Cal", cantidad:5, unidad:"bolsa", precio:8000},
+    {desc:"Mano de obra", cantidad:1, unidad:"unidad", precio:90000}
+  ]
+},
+{
+  nombre: "Instalación sanitaria",
+  items: [
+    {desc:"Cañerías PVC", cantidad:30, unidad:"m", precio:2000},
+    {desc:"Conexiones y accesorios", cantidad:1, unidad:"unidad", precio:25000},
+    {desc:"Instalación de grifería", cantidad:2, unidad:"unidad", precio:15000},
+    {desc:"Pruebas y ajuste", cantidad:1, unidad:"unidad", precio:10000},
+    {desc:"Mano de obra", cantidad:1, unidad:"unidad", precio:70000}
+  ]
+},
+{
+  nombre: "Instalación eléctrica básica",
+  items: [
+    {desc:"Cableado general", cantidad:50, unidad:"m", precio:1500},
+    {desc:"Llaves de luz", cantidad:5, unidad:"unidad", precio:8000},
+    {desc:"Tomacorrientes", cantidad:6, unidad:"unidad", precio:9000},
+    {desc:"Tablero eléctrico", cantidad:1, unidad:"unidad", precio:45000},
+    {desc:"Mano de obra", cantidad:1, unidad:"unidad", precio:80000}
+  ]
+}
 
+  ]))
+}
+plantillas = JSON.parse(localStorage.getItem("plantillas") || "[]")
 cargarEmpresa()
 cargarClientes()
 cargarHistorial()
@@ -1956,6 +1863,10 @@ renderListaClientes()
 renderListaProductos()
 cargarProductosCache()
 verificarVencimientos()
+renderListaPlantillas()
+cargarPlantillasSelect()
+// Cada 5 minutos (300000 ms)
+setInterval(backupAutomatico, 300000);
 </script>
 
 </body>
