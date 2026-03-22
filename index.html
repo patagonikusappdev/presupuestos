@@ -275,6 +275,21 @@ border-bottom:1px solid #eee;
 #tabla th{background:#f1f5f9;font-weight:600;}
 #tabla tr{transition:0.2s;}
 #tabla tr:hover{background:#f9fafb;}
+
+#btnRapido{
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 30px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  z-index: 2000;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
 </style>
 </head>
 
@@ -338,7 +353,52 @@ border-bottom:1px solid #eee;
 </div>
 
 <div id="logoContainer"></div>
+<div id="rapidoSeccion" class="seccion">
 
+<h3>Presupuesto rápido</h3>
+
+<div class="card">
+<select id="rapidoPlantilla" onchange="aplicarPlantillaRapida(this.value)">
+<option value="">Elegir plantilla</option>
+</select>
+
+<input id="rapidoNombre" placeholder="Nombre completo">
+<input id="rapidoTelefono" placeholder="Teléfono">
+
+</div>
+
+<div class="card">
+<h3>Items</h3>
+
+<div class="row">
+<input id="r_desc" placeholder="Descripción">
+<input id="r_cantidad" type="number" placeholder="Cantidad">
+<select id="r_unidad">
+<option value="">Elegir unidad</option>
+<option value="kg">kg</option>
+<option value="m">m</option>
+<option value="m2">m²</option>
+<option value="unidad">unidad</option>
+<option value="litro">litro</option>
+</select>
+<input id="r_precio" type="number" placeholder="Precio">
+</div>
+
+<button onclick="agregarItemRapido()">Agregar</button>
+
+<table>
+<tbody id="tablaRapido"></tbody>
+</table>
+
+<div class="total">Total: <span id="totalRapido">$0</span></div>
+
+<button class="whatsapp" onclick="enviarRapido()">WhatsApp</button>
+<button onclick="guardarRapido()">Guardar</button>
+<button class="delete" onclick="pdfRapido()">PDF</button>
+
+</div>
+
+</div>
 <div id="empresaSeccion" class="seccion">
 <h3>Sistema</h3>
 <div class="card"> 
@@ -510,6 +570,7 @@ border-bottom:1px solid #eee;
 </div>
 
 </div>
+<button id="btnRapido" onclick="abrirRapido()">＋</button>
 <script>
     let plantillas = JSON.parse(localStorage.getItem("plantillas") || "[]")
 let itemsPlantilla = []
@@ -1380,6 +1441,144 @@ document.getElementById("empresaForm").style.display="none"
 }
 
 }
+let itemsRapido = []
+
+function abrirRapido(){
+  mostrarSeccion("rapidoSeccion")
+  cargarPlantillasRapido()
+}
+
+function cargarPlantillasRapido(){
+  let select = document.getElementById("rapidoPlantilla")
+  select.innerHTML = '<option value="">Elegir plantilla</option>'
+  plantillas.forEach((p,i)=>{
+    let o=document.createElement("option")
+    o.value=i
+    o.textContent=p.nombre
+    select.appendChild(o)
+  })
+}
+
+function aplicarPlantillaRapida(i){
+  if(i==="") return
+  let p = plantillas[i]
+
+  itemsRapido = p.items.map(x=>({
+    ...x,
+    totalItem: x.precio * x.cantidad
+  }))
+
+  renderRapido()
+}
+
+function agregarItemRapido(){
+  let desc = r_desc.value
+  let cantidad = +r_cantidad.value
+  let precio = +r_precio.value
+  let unidad = r_unidad.value
+
+  if(!desc || !cantidad || !precio){
+    alert("Completa todo")
+    return
+  }
+
+  itemsRapido.push({
+    desc,cantidad,precio,unidad,
+    totalItem: cantidad*precio
+  })
+
+  renderRapido()
+
+  r_desc.value=""
+  r_cantidad.value=""
+  r_precio.value=""
+}
+
+function renderRapido(){
+  let cont = document.getElementById("tablaRapido")
+  cont.innerHTML=""
+
+  let total = 0
+
+  itemsRapido.forEach((i,index)=>{
+    total += i.totalItem
+
+    cont.innerHTML += `
+    <tr>
+      <td>${i.desc}</td>
+      <td>${i.cantidad}</td>
+      <td>$${i.precio}</td>
+      <td>$${i.totalItem}</td>
+      <td><button onclick="eliminarRapido(${index})">❌</button></td>
+    </tr>`
+  })
+
+  document.getElementById("totalRapido").innerText = moneda(total)
+}
+
+function eliminarRapido(i){
+  itemsRapido.splice(i,1)
+  renderRapido()
+}
+
+function enviarRapido(){
+  let nombre = document.getElementById("rapidoNombre").value
+  let tel = document.getElementById("rapidoTelefono").value
+
+  if(!nombre || !tel){
+    alert("Faltan datos")
+    return
+  }
+
+  let texto = `PRESUPUESTO\n\nCliente: ${nombre}\n\n`
+
+  itemsRapido.forEach(i=>{
+    texto += `- ${i.desc} ${i.cantidad} x $${i.precio} = $${i.totalItem}\n`
+  })
+
+  texto += `\nTOTAL: ${document.getElementById("totalRapido").innerText}`
+
+  window.open(`https://wa.me/${tel}?text=${encodeURIComponent(texto)}`)
+}
+
+function guardarRapido(){
+  let nombre = document.getElementById("rapidoNombre").value
+
+  if(!nombre || itemsRapido.length===0){
+    alert("Faltan datos")
+    return
+  }
+
+  let historial = JSON.parse(localStorage.getItem('historial')||"[]")
+
+  let total = itemsRapido.reduce((s,i)=>s+i.totalItem,0)
+
+  historial.push({
+    numero,
+    cliente:nombre,
+    total,
+    subtotal:total,
+    descuento:0,
+    fecha:new Date().toLocaleDateString(),
+    vencimiento:new Date(Date.now()+15*86400000).toLocaleDateString(),
+    estado:"Pendiente",
+    items:itemsRapido
+  })
+
+  numero++
+
+  localStorage.setItem("historial",JSON.stringify(historial))
+
+  alert("Guardado ✔️")
+
+  itemsRapido=[]
+  renderRapido()
+}
+
+function pdfRapido(){
+  items = itemsRapido
+  generarPDF()
+}
 function verificarVencimientos() {
   let historial = JSON.parse(localStorage.getItem("historial") || "[]")
   let hoy = new Date()
@@ -1706,7 +1905,7 @@ document.querySelectorAll(".menu button").forEach(b=>{
 b.classList.remove("active")
 })
 
-btn.classList.add("active")
+//btn.classList.add("active")
 if(id === "presupuestoSeccion"){
   cargarPlantillasSelect() // 🔥 AGREGAR
 }
@@ -1941,6 +2140,7 @@ cargarProductosCache()
 verificarVencimientos()
 renderListaPlantillas()
 cargarPlantillasSelect()
+backupAutomatico()
 // Cada 5 minutos (300000 ms)
 setInterval(backupAutomatico, 300000);
 </script>
